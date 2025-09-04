@@ -1,14 +1,16 @@
 'use client';
 
 import { useLanguage } from '@/components/providers/language-provider';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Code2, Building2, Network } from 'lucide-react';
-import Link from 'next/link';
+// import { Button } from '@/components/ui/button';
+// import { Card, CardContent } from '@/components/ui/card';
+// import { Code2, Building2, Network } from 'lucide-react';
+// import Link from 'next/link';
 
 export function HeroSection() {
   const { t } = useLanguage();
 
+  /*
+  // --- Tarjetas de audiencias (desactivadas por ahora) ---
   const audiences = [
     {
       icon: Code2,
@@ -38,23 +40,25 @@ export function HeroSection() {
       hoverGradient: 'hover:from-teal-500/20 hover:to-green-500/20',
     },
   ];
+  */
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+    <section className="relative pt-32 pb-8 flex items-center justify-center overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Hero Content */}
-        <div className="mb-16">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
               {t('hero.title')}
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-12 leading-relaxed">
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-6 leading-relaxed">
             {t('hero.subtitle')}
           </p>
         </div>
 
-        {/* Audience Cards */}
+        {/*
+        // --- Grid de tarjetas (desactivado por ahora) ---
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {audiences.map((audience, index) => (
             <Link key={index} href={audience.href}>
@@ -79,12 +83,12 @@ export function HeroSection() {
                   </Button>
                 </CardContent>
                 
-                {/* Hover Effect Background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${audience.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
               </Card>
             </Link>
           ))}
         </div>
+        */}
       </div>
     </section>
   );

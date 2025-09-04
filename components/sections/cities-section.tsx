@@ -8,14 +8,14 @@ import { MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
 
 const cities = [
-  { name: 'Ciudad de México', country: 'México', active: true },
-  { name: 'São Paulo', country: 'Brasil', active: true },
   { name: 'Buenos Aires', country: 'Argentina', active: true },
-  { name: 'Bogotá', country: 'Colombia', active: true },
-  { name: 'Santiago', country: 'Chile', active: false },
+  { name: 'Pipa', country: 'Brasil', active: true },
+  { name: 'Ciudad de México', country: 'México', active: false },
   { name: 'Lima', country: 'Perú', active: false },
-  { name: 'Caracas', country: 'Venezuela', active: false },
-  { name: 'Montevideo', country: 'Uruguay', active: false },
+  // { name: 'Bogotá', country: 'Colombia', active: false },
+  // { name: 'Santiago', country: 'Chile', active: false },
+  // { name: 'Caracas', country: 'Venezuela', active: false },
+  // { name: 'Montevideo', country: 'Uruguay', active: false },
 ];
 
 export function CitiesSection() {
@@ -31,12 +31,12 @@ export function CitiesSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-muted/10 to-background">
+    <section className="py-16 bg-gradient-to-b from-muted/10 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-              BdB en tu ciudad
+              Buen día Builders en tu ciudad
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -92,7 +92,7 @@ export function CitiesSection() {
                 ¿Tu ciudad no está en la lista?
               </h3>
               <p className="text-muted-foreground mb-8 text-center leading-relaxed">
-                Regístrate y te contactaremos cuando BdB llegue a tu ciudad
+                Regístrate y te contactaremos cuando Buen día Builders llegue a tu ciudad
               </p>
               
               <form onSubmit={handleSubmit} className="space-y-6">

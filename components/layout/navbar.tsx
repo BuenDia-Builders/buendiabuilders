@@ -6,8 +6,9 @@ import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/components/providers/language-provider';
 import { Button } from '@/components/ui/button';
-import { Sun, Moon, Menu, X, Code2 } from 'lucide-react';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,26 +25,28 @@ export function Navbar() {
     { href: '/builders', label: t('nav.builders') },
     { href: '/empresas', label: t('nav.empresas') },
     { href: '/blockchains', label: t('nav.blockchains') },
-    { href: '/dashboard', label: t('nav.dashboard') },
+    // { href: '/dashboard', label: t('nav.dashboard') },
   ];
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   return (
     <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md border-b border-border z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="relative">
-              <Code2 className="h-8 w-8 text-blue-500 group-hover:text-purple-500 transition-colors duration-300" />
+              <Image
+                src="/LogoBDB.png"
+                alt="Buen Día Builders Logo"
+                width={65}
+                height={65}
+                className="group-hover:scale-110 transition-transform duration-300"
+                priority
+              />
               <div className="absolute -inset-2 bg-blue-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-              Buen Día Builders
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -68,7 +71,7 @@ export function Navbar() {
           </div>
 
           {/* Controls */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 md:pr-0 pr-2">
             {/* Language Toggle */}
             <Button
               variant="ghost"
@@ -76,9 +79,7 @@ export function Navbar() {
               onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
               className="hidden sm:flex"
             >
-              <span className="text-xs font-medium">
-                {language === 'es' ? 'EN' : 'ES'}
-              </span>
+              <span className="text-xs font-medium">{language === 'es' ? 'EN' : 'ES'}</span>
             </Button>
 
             {/* Theme Toggle */}
@@ -88,25 +89,21 @@ export function Navbar() {
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="hidden sm:flex"
             >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
 
             {/* CTA Button */}
-            <Link href="/builders" className="hidden sm:block">
+            {/* <Link href="/builders" className="hidden sm:block">
               <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white">
                 {t('nav.join')}
               </Button>
-            </Link>
+            </Link> */}
 
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden ml-2"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -134,7 +131,7 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            
+
             <div className="flex items-center justify-between pt-4 border-t border-border">
               <Button
                 variant="ghost"
@@ -143,7 +140,7 @@ export function Navbar() {
               >
                 {language === 'es' ? 'EN' : 'ES'}
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -151,7 +148,7 @@ export function Navbar() {
               >
                 {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
-              
+
               <Link href="/builders" onClick={() => setIsOpen(false)}>
                 <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
                   {t('nav.join')}

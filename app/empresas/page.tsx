@@ -126,75 +126,75 @@ export default function EmpresasPage() {
   const talentPipeline = [
     {
       level: 'Junior Builders',
-      experience: '0-2 años',
-      description: 'Alta motivación, formación reciente, eager to learn',
+      // experience: '0-2 años',
+      description: 'Alta motivación, formación reciente',
       skills: ['Blockchain basics', 'Smart contracts', 'Web3 fundamentals'],
       salary: '$40k-60k USD',
     },
     {
-      level: 'Mid-level',
-      experience: '2-4 años', 
-      description: 'Proyectos reales, experiencia práctica, growth mindset',
-      skills: ['DeFi protocols', 'Full-stack Web3', 'System design'],
+      level: 'Nivel-Medio',
+      // experience: '2-4 años', 
+      description: 'Proyectos reales, experiencia práctica',
+      skills: ['protocolos DeFi', 'Full-stack Web3', 'Diseños de Sistemas'],
       salary: '$60k-90k USD',
     },
     {
       level: 'Senior',
-      experience: '4+ años',
-      description: 'Leadership capacity, architectural decisions, mentoring',
-      skills: ['Protocol design', 'Team leadership', 'Strategic thinking'],
+      // experience: '4+ años',
+      description: 'Capacidad de liderazgo, decisiones de arquitectura, mentoría',
+      skills: ['Diseño de protocolos', 'Liderazgo de equipos', 'Pensamiento estratégico'],
       salary: '$90k-150k USD',
     },
     {
-      level: 'Specialists',
-      experience: 'Variable',
-      description: 'Expertise específica en verticales como DeFi, Gaming, Infrastructure',
-      skills: ['Domain expertise', 'Advanced protocols', 'Innovation'],
+      level: 'Especialistas',
+      // experience: 'Variable',
+      description: 'Esperiencia específica en verticales como DeFi, Gaming, Infraestructura',
+      skills: ['Experiencia en el dominio', 'Protocolos avanzados', 'Innovación'],
       salary: 'Market premium',
     },
   ];
 
-  const caseStudies = [
-    {
-      company: 'Fintech LATAM',
-      industry: 'Financial Services',
-      challenge: 'Incorporar team DeFi para nuevo producto',
-      solution: 'Talent acquisition + team training program',
-      results: [
-        'Team DeFi de 8 personas en 3 meses',
-        'Producto lanzado 40% más rápido',
-        '85% retention rate del equipo'
-      ],
-      testimonial: '"BdB nos conectó con talento que nunca habríamos encontrado por otros medios."',
-      author: 'CTO, Fintech LATAM',
-    },
-    {
-      company: 'Banco Regional',
-      industry: 'Banking',
-      challenge: 'Implementar blockchain para pagos cross-border',
-      solution: 'Strategic consulting + corporate training',
-      results: [
-        'Roadmap blockchain de 18 meses',
-        '200+ empleados capacitados',
-        'POC implementado exitosamente'
-      ],
-      testimonial: '"La expertise de BdB aceleró nuestra transformación digital significativamente."',
-      author: 'Head of Innovation, Banco Regional',
-    },
-    {
-      company: 'Startup SaaS',
-      industry: 'Technology',
-      challenge: 'Escalar con Web3 talent para nueva vertical',
-      solution: 'Custom program + talent pipeline',
-      results: [
-        'Team Web3 de 0 a 15 personas',
-        'Nueva vertical generando revenue',
-        'Valuación aumentó 300%'
-      ],
-      testimonial: '"BdB fue fundamental para nuestro pivot exitoso hacia Web3."',
-      author: 'CEO, Startup SaaS',
-    },
-  ];
+  // const caseStudies = [
+  //   {
+  //     company: 'Fintech LATAM',
+  //     industry: 'Financial Services',
+  //     challenge: 'Incorporar team DeFi para nuevo producto',
+  //     solution: 'Talent acquisition + team training program',
+  //     results: [
+  //       'Team DeFi de 8 personas en 3 meses',
+  //       'Producto lanzado 40% más rápido',
+  //       '85% retention rate del equipo'
+  //     ],
+  //     testimonial: '"BdB nos conectó con talento que nunca habríamos encontrado por otros medios."',
+  //     author: 'CTO, Fintech LATAM',
+  //   },
+  //   {
+  //     company: 'Banco Regional',
+  //     industry: 'Banking',
+  //     challenge: 'Implementar blockchain para pagos cross-border',
+  //     solution: 'Strategic consulting + corporate training',
+  //     results: [
+  //       'Roadmap blockchain de 18 meses',
+  //       '200+ empleados capacitados',
+  //       'POC implementado exitosamente'
+  //     ],
+  //     testimonial: '"La expertise de BdB aceleró nuestra transformación digital significativamente."',
+  //     author: 'Head of Innovation, Banco Regional',
+  //   },
+  //   {
+  //     company: 'Startup SaaS',
+  //     industry: 'Technology',
+  //     challenge: 'Escalar con Web3 talent para nueva vertical',
+  //     solution: 'Custom program + talent pipeline',
+  //     results: [
+  //       'Team Web3 de 0 a 15 personas',
+  //       'Nueva vertical generando revenue',
+  //       'Valuación aumentó 300%'
+  //     ],
+  //     testimonial: '"BdB fue fundamental para nuestro pivot exitoso hacia Web3."',
+  //     author: 'CEO, Startup SaaS',
+  //   },
+  // ];
 
   return (
     <div className="min-h-screen pt-16">
@@ -214,7 +214,7 @@ export default function EmpresasPage() {
               Reclutamiento especializado, capacitación y consultoría estratégica para acelerar la transformación Web3 de tu organización
             </p>
             <Button size="lg" className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-              Agendar discovery call
+              Agendar una llamada de descubrimiento
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -222,7 +222,7 @@ export default function EmpresasPage() {
       </section>
 
       {/* Services */}
-      <section className="py-24">
+      {/* <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Servicios corporativos</h2>
@@ -265,7 +265,7 @@ export default function EmpresasPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Process */}
       <section className="py-24 bg-gradient-to-b from-muted/10 to-background">
@@ -305,9 +305,9 @@ export default function EmpresasPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Talent Pipeline</h2>
+            <h2 className="text-4xl font-bold mb-6">Talentos</h2>
             <p className="text-xl text-muted-foreground">
-              Perfiles disponibles según tu necesidad y presupuesto
+              Perfiles disponibles según la necesidad de tu empresa
             </p>
           </div>
 
@@ -316,7 +316,7 @@ export default function EmpresasPage() {
               <Card key={index} className="group hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-8">
                   <h3 className="text-xl font-bold mb-2">{profile.level}</h3>
-                  <Badge className="mb-4 bg-blue-500/10 text-blue-500">{profile.experience}</Badge>
+                  {/* <Badge className="mb-4 bg-blue-500/10 text-blue-500">{profile.experience}</Badge> */}
                   
                   <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
                     {profile.description}
@@ -331,10 +331,10 @@ export default function EmpresasPage() {
                     ))}
                   </div>
                   
-                  <Badge variant="outline" className="w-full justify-center">
+                  {/* <Badge variant="outline" className="w-full justify-center">
                     <DollarSign className="w-3 h-3 mr-1" />
                     {profile.salary}
-                  </Badge>
+                  </Badge> */}
                 </CardContent>
               </Card>
             ))}
@@ -343,7 +343,7 @@ export default function EmpresasPage() {
       </section>
 
       {/* Case Studies */}
-      <section className="py-24 bg-gradient-to-b from-background to-muted/10">
+      {/* <section className="py-24 bg-gradient-to-b from-background to-muted/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Case Studies</h2>
@@ -395,7 +395,7 @@ export default function EmpresasPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Contact Form */}
       <section className="py-24">
@@ -403,7 +403,7 @@ export default function EmpresasPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">
               <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
-                Comencemos a trabajar juntos
+                Comencemos a trabajar
               </span>
             </h2>
             <p className="text-xl text-muted-foreground">
@@ -467,7 +467,7 @@ export default function EmpresasPage() {
                     required
                   />
                 </div>
-
+{/* 
                 <div>
                   <label className="block text-sm font-medium mb-2">Timeline</label>
                   <Input
@@ -476,14 +476,14 @@ export default function EmpresasPage() {
                     placeholder="¿Cuándo necesitas implementar?"
                     required
                   />
-                </div>
+                </div> */}
 
                 <Button 
                   type="submit" 
                   size="lg" 
                   className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
                 >
-                  Solicitar discovery call
+                  Solicitar llamada de descubrimiento
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </form>

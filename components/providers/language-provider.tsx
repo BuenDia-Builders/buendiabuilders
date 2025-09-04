@@ -13,42 +13,45 @@ interface LanguageContextType {
 const translations = {
   es: {
     // Navbar
-    'nav.builders': 'Builders',
-    'nav.empresas': 'Empresas', 
+    'nav.builders': 'Desarrolladoras',
+    'nav.empresas': 'Empresas',
     'nav.blockchains': 'Blockchains',
     'nav.recursos': 'Recursos',
-    'nav.join': 'Unirse a la comunidad',
+    'nav.join': 'Iniciar Sesión',
     'nav.dashboard': 'Dashboard',
-    
+
     // Hero Section
-    'hero.title': 'Conectamos Builders, Empresas y Blockchains para crear el futuro Web3 en LATAM',
-    'hero.subtitle': 'El espacio donde developers se unen a la construcción del ecosistema Web3 más dinámico de Latinoamérica.',
-    'hero.builder.title': 'Soy Builder',
-    'hero.builder.subtitle': 'Comienza tu journey Builder',
-    'hero.company.title': 'Soy Empresa', 
-    'hero.company.subtitle': 'Conecta con talento Web3',
-    'hero.blockchain.title': 'Soy Blockchain',
-    'hero.blockchain.subtitle': 'Escala tu protocolo con BdB',
-    
+    "hero.title": "Conectamos desarrolladoras, empresas, blockchains y protocolos para impulsar el futuro Web3 en LATAM",
+    "hero.subtitle": "Buen día Builders es el lugar donde desarrolladoras construyen el ecosistema Web3 más vibrante de Latinoamérica.",
+
+    "hero.builder.title": "Soy creadora",
+    "hero.builder.subtitle": "Empieza tu camino Web3",
+
+    "hero.company.title": "Soy empresa",
+    "hero.company.subtitle": "Encuentra talento Web3",
+
+    "hero.blockchain.title": "Soy blockchain",
+    "hero.blockchain.subtitle": "Haz crecer tu protocolo con BdB",
+
     // Metrics
     'metrics.builders': 'Builders Activos en el Sistema',
     'metrics.companies': 'Empresas Vinculadas',
     'metrics.growth': 'Crecimiento anual de Graduados entre 2023',
     'metrics.funding': 'Nuevos Activos como Asset Crypto',
-    
+
     // Main Sections
     'builders.title': 'Conectamos builders con ideas y oportunidades',
     'builders.description': 'Desde una educación especializada, pasamos al ecosistema donde tu futuro profesional puede crecer, aprender y conectarse con las mejores oportunidades.',
     'builders.cta': 'Quiero ser Builder',
-    
+
     'companies.title': 'El talento Web3 que tu empresa necesita',
     'companies.description': 'Reclutamiento especializado, capacitación y consultoría estratégica para acelerar la transformación Web3 de tu organización.',
     'companies.cta': 'Contratar talento',
-    
+
     'blockchains.title': 'Acelera la adopción de tu protocolo en LATAM',
     'blockchains.description': 'Educación técnica, onboarding y community building para expandir tu ecosistema en la región más prometedora.',
     'blockchains.cta': 'Expandir protocolo',
-    
+
     // How to Participate
     'participate.title': 'Cómo se puede participar',
     'participate.subtitle': 'Un journey estructurado que te llevará desde las bases hasta proyectos reales en el ecosistema Web3.',
@@ -61,7 +64,7 @@ const translations = {
     'participate.build.title': 'PARTICIPAR',
     'participate.build.description': 'Desarrolla proyectos reales con mentorías y feedback constante.',
     'participate.build.cta': 'Comenzar proyecto',
-    
+
     // What is Builder
     'what.title': '¿Qué es ser Builder?',
     'what.subtitle': 'Ser Builder es más que programar: es liderar la transformación hacia una era digital más descentralizada.',
@@ -73,7 +76,7 @@ const translations = {
     'what.creator.description': 'Construye herramientas y aplicaciones que impactan positivamente.',
     'what.builder.title': 'BUILDER',
     'what.builder.description': 'Lidera proyectos y mentoriza a otros en su journey Web3.',
-    
+
     // Explorer Stage
     'explorer.title': 'Etapa EXPLORADORA WEB3',
     'explorer.subtitle': 'Fundamentos y bases',
@@ -88,7 +91,7 @@ const translations = {
     'explorer.advanced.item3': 'Primeras implementaciones funcionales',
     'explorer.advanced.item4': 'Red de contactos inicial en la comunidad',
     'explorer.cta': 'Comenzar journey',
-    
+
     // Commitment
     'commitment.title': 'Redefiniendo el ecosistema Web3:',
     'commitment.subtitle': 'Nuestro compromiso',
@@ -101,7 +104,7 @@ const translations = {
     'commitment.growth.value': '+3.6%',
     'commitment.future.title': 'Nuestro Futuro como Asset Crypto',
     'commitment.future.value': '33+',
-    
+
     // Strategy
     'strategy.title': 'Nuestra estrategia para un impacto duradero',
     'strategy.description': 'Tres pilares fundamentales que garantizan el éxito de nuestros builders y el crecimiento del ecosistema.',
@@ -112,12 +115,12 @@ const translations = {
     'strategy.practice.title': 'Proyectos Reales',
     'strategy.practice.description': 'Experiencia práctica construyendo soluciones que impactan en organizaciones reales.',
     'strategy.cta': 'Ver metodología',
-    
+
     // Footer
     'footer.community': 'Comunidad',
     'footer.builders.nav': 'Builders',
     'footer.companies.nav': 'Empresas',
-    'footer.blockchains.nav': 'Blockchains', 
+    'footer.blockchains.nav': 'Blockchains',
     'footer.resources': 'Recursos',
     'footer.blog': 'Blog',
     'footer.docs': 'Documentación',
@@ -130,7 +133,7 @@ const translations = {
     'footer.privacy': 'Privacidad',
     'footer.terms': 'Términos',
     'footer.socials': 'Síguenos en redes',
-    'footer.newsletter': 'Mantente al día',
+    'footer.newsletter': 'Para ponerse al día',
     'footer.copyright': '2025 Buen Día Builders. Construyendo el futuro Web3 en LATAM.',
   },
   en: {
@@ -139,9 +142,9 @@ const translations = {
     'nav.empresas': 'Companies',
     'nav.blockchains': 'Blockchains',
     'nav.recursos': 'Resources',
-    'nav.join': 'Join the community',
+    'nav.join': 'Loguin',
     'nav.dashboard': 'Dashboard',
-    
+
     // Hero Section  
     'hero.title': 'Connecting Builders, Companies and Blockchains to create Web3\'s future in LATAM',
     'hero.subtitle': 'The space where developers join the construction of Latin America\'s most dynamic Web3 ecosystem.',
@@ -151,26 +154,26 @@ const translations = {
     'hero.company.subtitle': 'Connect with Web3 talent',
     'hero.blockchain.title': 'I\'m a Blockchain',
     'hero.blockchain.subtitle': 'Scale your protocol with BdB',
-    
+
     // Metrics
     'metrics.builders': 'Active Builders in the System',
     'metrics.companies': 'Connected Companies',
     'metrics.growth': 'Annual Growth of Graduates between 2023',
     'metrics.funding': 'New Assets as Crypto Asset',
-    
+
     // Main Sections
     'builders.title': 'Connecting builders with ideas and opportunities',
     'builders.description': 'From specialized education, we move to the ecosystem where your professional future can grow, learn and connect with the best opportunities.',
     'builders.cta': 'Become a Builder',
-    
+
     'companies.title': 'The Web3 talent your company needs',
     'companies.description': 'Specialized recruitment, training and strategic consulting to accelerate your organization\'s Web3 transformation.',
     'companies.cta': 'Hire talent',
-    
+
     'blockchains.title': 'Accelerate your protocol adoption in LATAM',
     'blockchains.description': 'Technical education, onboarding and community building to expand your ecosystem in the most promising region.',
     'blockchains.cta': 'Expand protocol',
-    
+
     // How to Participate
     'participate.title': 'How to participate',
     'participate.subtitle': 'A structured journey that will take you from basics to real projects in the Web3 ecosystem.',
@@ -183,7 +186,7 @@ const translations = {
     'participate.build.title': 'PARTICIPATE',
     'participate.build.description': 'Develop real projects with mentoring and constant feedback.',
     'participate.build.cta': 'Start project',
-    
+
     // What is Builder
     'what.title': 'What does it mean to be a Builder?',
     'what.subtitle': 'Being a Builder is more than programming: it\'s leading the transformation towards a more decentralized digital era.',
@@ -195,7 +198,7 @@ const translations = {
     'what.creator.description': 'Builds tools and applications that impact positively.',
     'what.builder.title': 'BUILDER',
     'what.builder.description': 'Leads projects and mentors others in their Web3 journey.',
-    
+
     // Explorer Stage
     'explorer.title': 'WEB3 EXPLORER Stage',
     'explorer.subtitle': 'Fundamentals and foundations',
@@ -210,7 +213,7 @@ const translations = {
     'explorer.advanced.item3': 'First functional implementations',
     'explorer.advanced.item4': 'Initial contact network in the community',
     'explorer.cta': 'Start journey',
-    
+
     // Commitment
     'commitment.title': 'Redefining the Web3 ecosystem:',
     'commitment.subtitle': 'Our commitment',
@@ -223,7 +226,7 @@ const translations = {
     'commitment.growth.value': '+3.6%',
     'commitment.future.title': 'Our Future as Crypto Asset',
     'commitment.future.value': '33+',
-    
+
     // Strategy
     'strategy.title': 'Our strategy for lasting impact',
     'strategy.description': 'Three fundamental pillars that guarantee the success of our builders and ecosystem growth.',
@@ -234,7 +237,7 @@ const translations = {
     'strategy.practice.title': 'Real Projects',
     'strategy.practice.description': 'Practical experience building solutions that impact real organizations.',
     'strategy.cta': 'View methodology',
-    
+
     // Footer
     'footer.community': 'Community',
     'footer.builders.nav': 'Builders',

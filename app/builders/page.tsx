@@ -6,20 +6,30 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Code2, 
-  Rocket, 
-  Users, 
-  BookOpen, 
-  Award, 
-  ArrowRight, 
+import {
+  Code2,
+  Rocket,
+  Users,
+  BookOpen,
+  Award,
+  ArrowRight,
   CheckCircle,
   Zap,
   Target,
   Brain,
-  Heart
+  Heart,
+  ArrowUp
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+
+// acordeón de shadcn/ui
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 export default function BuildersPage() {
   const { t } = useLanguage();
@@ -31,6 +41,28 @@ export default function BuildersPage() {
     portfolio: '',
   });
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      setIsVisible(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Función para hacer scroll al formulario
+  const scrollToForm = () => {
+    const formSection = document.getElementById('application-form');
+    if (formSection) {
+      formSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Builder application:', formData);
@@ -40,7 +72,7 @@ export default function BuildersPage() {
     {
       phase: 'Aplicación',
       title: 'Completa tu perfil',
-      description: 'Cuéntanos sobre tu experiencia y motivación',
+      description: 'Hablemos sobre tu experiencia y motivación',
       icon: Code2,
       gradient: 'from-blue-500 to-cyan-500',
       duration: '1 día',
@@ -63,7 +95,7 @@ export default function BuildersPage() {
     },
     {
       phase: 'Proyecto',
-      title: 'Build real',
+      title: 'Construcción real',
       description: 'Desarrolla con mentorías y feedback',
       icon: Rocket,
       gradient: 'from-orange-500 to-red-500',
@@ -72,64 +104,10 @@ export default function BuildersPage() {
     {
       phase: 'Graduación',
       title: 'Portfolio + Network',
-      description: 'Certificación y job placement',
+      description: 'Certificación',
       icon: Award,
       gradient: 'from-yellow-500 to-orange-500',
       duration: 'Lifetime',
-    },
-  ];
-
-  const builderTypes = [
-    {
-      title: 'EXPLORADOR WEB3',
-      description: 'Curioso por naturaleza, siempre en busca de las últimas innovaciones',
-      icon: Target,
-      skills: ['Blockchain fundamentals', 'Smart contracts basics', 'DeFi protocols'],
-      color: 'from-blue-500 to-cyan-500',
-    },
-    {
-      title: 'SOLUCIONADOR',
-      description: 'Encuentra soluciones creativas a problemas complejos del ecosistema',
-      icon: Brain,
-      skills: ['Problem solving', 'System design', 'Architecture patterns'],
-      color: 'from-purple-500 to-pink-500',
-    },
-    {
-      title: 'CREADOR',
-      description: 'Construye herramientas y aplicaciones que impactan positivamente',
-      icon: Zap,
-      skills: ['Full-stack development', 'UI/UX design', 'Product development'],
-      color: 'from-teal-500 to-green-500',
-    },
-    {
-      title: 'BUILDER',
-      description: 'Lidera proyectos y mentoriza a otros en su journey Web3',
-      icon: Heart,
-      skills: ['Leadership', 'Mentoring', 'Project management'],
-      color: 'from-orange-500 to-red-500',
-    },
-  ];
-
-  const resources = [
-    {
-      title: 'Laboratorios',
-      description: 'Acceso a testnets y herramientas de desarrollo',
-      features: ['Ethereum Testnet', 'Solana Devnet', 'Polygon Mumbai', 'Local blockchain'],
-    },
-    {
-      title: 'Biblioteca',
-      description: 'Documentación, videos y tutorials',
-      features: ['Technical docs', 'Video courses', 'Code examples', 'Best practices'],
-    },
-    {
-      title: 'Eventos',
-      description: 'Workshops semanales y demos mensuales',
-      features: ['Weekly workshops', 'Monthly demos', 'Networking events', 'Guest speakers'],
-    },
-    {
-      title: 'Comunidad',
-      description: 'Slack workspace privado',
-      features: ['Private channels', 'Peer support', 'Mentor access', 'Job board'],
     },
   ];
 
@@ -140,15 +118,15 @@ export default function BuildersPage() {
     },
     {
       question: '¿Qué nivel técnico necesito?',
-      answer: 'Buscamos developers con al menos 1-2 años de experiencia en programación. No necesitas conocimiento previo en Web3, eso lo enseñamos.',
+      answer: 'Buscamos programadoras con experiencia . No necesitas conocimiento previo en Web3, eso lo enseñamos.',
     },
     {
       question: '¿Cómo es el proceso de selección?',
-      answer: 'Aplicación online + entrevista técnica + assessment motivacional. Buscamos tanto skills como fit cultural y ganas de aprender.',
+      answer: 'Aplicación online + entrevista técnica + evaluación motivacional. Buscamos tanto skills como fit cultural y ganas de aprender.',
     },
     {
       question: '¿Garantizan trabajo al final?',
-      answer: 'No garantizamos empleo, pero sí te preparamos con portfolio, network y skills demandadas. Muchos graduates consiguen trabajo rápidamente.',
+      answer: 'No garantizamos empleo, pero sí te preparamos con portfolio, network y skills demandadas.',
     },
     {
       question: '¿Puedo trabajar mientras estudio?',
@@ -157,23 +135,28 @@ export default function BuildersPage() {
   ];
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="min-h-screen pt-16 relative">
       {/* Hero Section */}
       <section className="py-24 bg-gradient-to-b from-blue-500/5 to-purple-500/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-6 px-4 py-2 bg-blue-500/10 text-blue-500 border-blue-500/20">
-              Para Developers
+              Para Programadoras
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-                Tu journey Web3 comienza aquí
+                Tu viaje a Web3 comienza aquí
               </span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Programa intensivo y gratuito que te transforma de developer tradicional a Web3 builder con oportunidades reales de empleo
+              Programa intensivo y gratuito que te transforma de <br />Programadora Web2 a Programadora Web3
             </p>
-            <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+            {/* El botón ahora tiene un onClick que llama a la función scrollToForm */}
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+              onClick={scrollToForm}
+            >
               Aplicar ahora
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -185,16 +168,16 @@ export default function BuildersPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Tu journey paso a paso</h2>
+            <h2 className="text-4xl font-bold mb-6">Tu viaje paso a paso</h2>
             <p className="text-xl text-muted-foreground">
-              Un proceso estructurado que te lleva desde la aplicación hasta el job placement
+              Un proceso estructurado que te lleva desde la aplicación hasta la construcción de proyectos reales
             </p>
           </div>
 
           <div className="relative">
             {/* Timeline Line */}
             <div className="absolute left-1/2 transform -translate-x-0.5 w-0.5 h-full bg-gradient-to-b from-blue-500 via-purple-500 to-teal-500 opacity-30" />
-            
+
             <div className="space-y-16">
               {journey.map((step, index) => (
                 <div key={index} className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
@@ -210,13 +193,13 @@ export default function BuildersPage() {
                       </CardContent>
                     </Card>
                   </div>
-                  
+
                   <div className="relative z-10">
                     <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${step.gradient} flex items-center justify-center shadow-lg`}>
                       <step.icon className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                  
+
                   <div className="w-1/2" />
                 </div>
               ))}
@@ -225,76 +208,9 @@ export default function BuildersPage() {
         </div>
       </section>
 
-      {/* Builder Types */}
-      <section className="py-24 bg-gradient-to-b from-muted/10 to-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">¿Qué tipo de Builder eres?</h2>
-            <p className="text-xl text-muted-foreground">
-              Diferentes paths para diferentes perfiles, todos llevando al mismo objetivo
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {builderTypes.map((type, index) => (
-              <Card key={index} className={`group relative overflow-hidden bg-gradient-to-br ${type.color.replace('from-', 'from-').replace('to-', 'to-')}/5 border-0 hover:shadow-xl transition-all duration-300`}>
-                <CardContent className="p-8">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r ${type.color} mb-6`}>
-                    <type.icon className="w-6 h-6 text-white" />
-                  </div>
-                  
-                  <h3 className="text-lg font-bold mb-4">{type.title}</h3>
-                  <p className="text-muted-foreground mb-6 text-sm leading-relaxed">{type.description}</p>
-                  
-                  <div className="space-y-2">
-                    {type.skills.map((skill, skillIndex) => (
-                      <div key={skillIndex} className="flex items-center text-xs">
-                        <CheckCircle className="w-3 h-3 text-green-500 mr-2" />
-                        <span>{skill}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Resources */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Herramientas y recursos</h2>
-            <p className="text-xl text-muted-foreground">
-              Todo lo que necesitas para acelerar tu aprendizaje Web3
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {resources.map((resource, index) => (
-              <Card key={index} className="group hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-bold mb-4">{resource.title}</h3>
-                  <p className="text-muted-foreground mb-6">{resource.description}</p>
-                  
-                  <ul className="space-y-2">
-                    {resource.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-sm">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Application Form */}
-      <section className="py-24 bg-gradient-to-b from-background to-muted/10">
+      {/* Se añadió el ID 'application-form' a esta sección */}
+      <section id="application-form" className="py-24 bg-gradient-to-b from-background to-muted/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">
@@ -355,7 +271,7 @@ export default function BuildersPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Portfolio/GitHub (opcional)</label>
+                  <label className="block text-sm font-medium mb-2">Portfolio/GitHub</label>
                   <Input
                     value={formData.portfolio}
                     onChange={(e) => setFormData({...formData, portfolio: e.target.value})}
@@ -363,9 +279,9 @@ export default function BuildersPage() {
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
-                  size="lg" 
+                <Button
+                  type="submit"
+                  size="lg"
                   className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white"
                 >
                   Enviar aplicación
@@ -377,28 +293,42 @@ export default function BuildersPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* FAQ con acordeón */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">FAQ Builders</h2>
+            <h2 className="text-4xl font-bold mb-6">Preguntas de Programadoras</h2>
             <p className="text-xl text-muted-foreground">
               Respuestas a las preguntas más frecuentes
             </p>
           </div>
 
-          <div className="space-y-6">
+          <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-bold mb-4">{faq.question}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                </CardContent>
-              </Card>
+              <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg">
+                <AccordionTrigger className="px-6 py-4 text-left text-lg font-semibold hover:bg-muted/30 transition">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="px-6 py-4 text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </section>
+
+      {/* Botón Scroll To Top */}
+      {isVisible && (
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+        >
+          <ArrowUp size={24} />
+        </motion.button>
+      )}
     </div>
   );
 }

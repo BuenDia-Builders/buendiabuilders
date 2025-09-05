@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resend } from '@/lib/resend';
-import type { EmailType, BuildersEmailData, EmpresasEmailData, BlockchainsEmailData, CitiesEmailData } from '@/lib/email-service';
+import type { EmailType, BuildersEmailData, EmpresasEmailData, BlockchainsEmailData } from '@/lib/email-service';
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,12 +31,6 @@ export async function POST(req: NextRequest) {
       case 'blockchains':
         emailContent = generateBlockchainsEmail(data as BlockchainsEmailData);
         subject = 'Partnership BdB - Siguiente paso';
-        to = data.email;
-        break;
-
-      case 'cities':
-        emailContent = generateCitiesEmail(data as CitiesEmailData);
-        subject = '¡Te notificaremos cuando lleguemos a tu ciudad! 🌟';
         to = data.email;
         break;
 
@@ -152,12 +146,12 @@ function generateBuildersEmail(data: BuildersEmailData): string {
           <p>Te recomendamos revisar nuestros recursos preparatorios:</p>
           <div style="text-align: center; margin: 20px 0;">
             <a href="#" class="button">Recursos Web3 📚</a>
-            <a href="https://x.com/buendiabuilders" class="button">Síguenos en Twitter</a>
+            <a href="#" class="button">Únete a Discord 💬</a>
           </div>
         </div>
 
         <div class="footer">
-          <p>¿Preguntas? Responde este email o escríbenos a buendiabuilders@gmail.com</p>
+          <p>¿Preguntas? Responde este email o escríbenos a builders@bdb.com</p>
           <p><strong>Builders de Blockchain</strong> - Formando el futuro Web3 de LATAM</p>
         </div>
       </div>
@@ -258,7 +252,7 @@ function generateEmpresasEmail(data: EmpresasEmailData): string {
         </div>
 
         <div class="footer">
-          <p>¿Urgente? Escríbenos a buendiabuilders@gmail.com</p>
+          <p>¿Urgente? Escríbenos a enterprise@bdb.com</p>
           <p><strong>Builders de Blockchain</strong> - Tu socio estratégico Web3</p>
         </div>
       </div>
@@ -358,119 +352,13 @@ function generateBlockchainsEmail(data: BlockchainsEmailData): string {
           
           <div style="text-align: center; margin: 20px 0;">
             <a href="#" class="button">Ver case studies 📊</a>
-            <a href="https://calendar.app.google/XqUmUcgMq8ozc8dD9" class="button">Agenda una llamada 📞</a>
+            <a href="#" class="button">Agenda una llamada 📞</a>
           </div>
         </div>
 
         <div class="footer">
           <p>¿Preguntas inmediatas? partnerships@bdb.com</p>
           <p><strong>Builders de Blockchain</strong> - Acelerando protocolos en LATAM</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
-}
-
-function generateCitiesEmail(data: CitiesEmailData): string {
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <style>
-        body { 
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-          line-height: 1.6; 
-          color: #333; 
-          margin: 0;
-          padding: 0;
-        }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { 
-          background: linear-gradient(135deg, #8b5cf6, #14b8a6); 
-          padding: 30px 20px; 
-          text-align: center; 
-          color: white; 
-          border-radius: 12px; 
-          margin-bottom: 20px;
-        }
-        .header h1 { margin: 0 0 10px 0; font-size: 28px; }
-        .content { 
-          padding: 30px; 
-          background: #f9fafb; 
-          border-radius: 12px; 
-          margin: 20px 0; 
-          border: 1px solid #e5e7eb;
-        }
-        .button { 
-          display: inline-block; 
-          background: linear-gradient(135deg, #8b5cf6, #14b8a6); 
-          color: white; 
-          padding: 12px 24px; 
-          text-decoration: none; 
-          border-radius: 8px; 
-          margin: 10px 5px; 
-          font-weight: 500;
-        }
-        .footer { 
-          text-align: center; 
-          color: #6b7280; 
-          font-size: 14px; 
-          margin-top: 30px; 
-          padding: 20px;
-        }
-        .city-box { 
-          background: #f0f9ff; 
-          padding: 20px; 
-          border-radius: 8px; 
-          border-left: 4px solid #3b82f6; 
-          margin: 20px 0;
-        }
-        ul { padding-left: 20px; }
-        li { margin: 8px 0; }
-        h3 { color: #374151; margin-top: 25px; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>¡Te tendremos en mente!</h1>
-          <p>Gracias por tu interés en ${data.city}</p>
-        </div>
-        
-        <div class="content">
-          <h2>Hemos registrado tu interés</h2>
-          <p>Hemos recibido tu solicitud para ser notificado cuando Buen día Builders llegue a ${data.city}.</p>
-          
-          <div class="city-box">
-            <h3>Tu registro:</h3>
-            <p><strong>Ciudad:</strong> ${data.city}</p>
-            <p><strong>Email:</strong> ${data.email}</p>
-            <p><strong>Estado:</strong> En lista de espera</p>
-          </div>
-
-          <h3>¿Qué puedes esperar?</h3>
-          <ul>
-            <li>Te contactaremos tan pronto definamos la expansión a ${data.city}</li>
-            <li>Serás de los primeros en conocer sobre eventos y workshops</li>
-            <li>Tendrás acceso prioritario a nuestros programas</li>
-            <li>Recibirás updates mensuales sobre el ecosistema Web3 LATAM</li>
-          </ul>
-
-          <p>Mientras tanto, puedes unirte a nuestra comunidad online:</p>
-          <div style="text-align: center; margin: 20px 0;">
-            <a href="#" class="button">Únete a Discord</a>
-            <a href="https://x.com/buendiabuilders" class="button">Síguenos en Twitter</a>
-          </div>
-
-          <p><strong>¿Conoces más personas interesadas en ${data.city}?</strong><br>
-          ¡Comparte este formulario! Entre más interés mostremos, más rápido priorizaremos tu ciudad.</p>
-        </div>
-
-        <div class="footer">
-          <p>¿Preguntas? Responde este email o escríbenos a expansion@bdb.com</p>
-          <p><strong>Builders de Blockchain</strong> - Expandiendo Web3 por toda LATAM</p>
         </div>
       </div>
     </body>

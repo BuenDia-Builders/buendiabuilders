@@ -1,4 +1,4 @@
-export type EmailType = 'builders' | 'empresas' | 'blockchains' | 'cities';
+export type EmailType = 'builders' | 'empresas' | 'blockchains';
 
 export interface BuildersEmailData {
   fullName: string;
@@ -25,12 +25,7 @@ export interface BlockchainsEmailData {
   budget?: string | null;
 }
 
-export interface CitiesEmailData {
-  email: string;
-  city: string;
-}
-
-export type EmailData = BuildersEmailData | EmpresasEmailData | BlockchainsEmailData | CitiesEmailData;
+export type EmailData = BuildersEmailData | EmpresasEmailData | BlockchainsEmailData;
 
 export async function sendEmail(type: EmailType, data: EmailData) {
   try {

@@ -39,12 +39,3 @@ export interface BlockchainInquiry {
   created_at?: string
   updated_at?: string
 }
-
-// Types para Cities
-export interface CityInterest {
-  id?: string
-  email: string
-  city: string
-  created_at?: string
-  updated_at?: string
-}

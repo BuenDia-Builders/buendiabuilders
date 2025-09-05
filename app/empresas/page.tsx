@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { sendEmail } from '@/lib/email-service';
 import { 
   Building2, 
   Users, 
@@ -17,24 +19,114 @@ import {
   Star,
   Calendar,
   DollarSign,
-  Award
+  Award,
+  Loader2
 } from 'lucide-react';
 import { useState } from 'react';
+import { supabase, type CompanyInquiry } from '@/lib/supabase';
 
 export default function EmpresasPage() {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     company: '',
     name: '',
     email: '',
     role: '',
     needs: '',
-    timeline: '',
   });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Company inquiry:', formData);
+    setIsSubmitting(true);
+    
+    try {
+      if (!formData.company || !formData.name || !formData.email || !formData.role || !formData.needs) {
+        toast({
+          title: "Error de validación",
+          description: "Por favor, completa todos los campos obligatorios",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: "Email inválido",
+          description: "Por favor, ingresa un email válido",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Guardar en Supabase
+      const { data, error } = await supabase
+        .from('company_inquiries')
+        .insert([{
+          company: formData.company.trim(),
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          role: formData.role.trim(),
+          needs: formData.needs.trim(),
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error al guardar:', error);
+          toast({
+            title: "Error al enviar",
+            description: "Error al enviar la consulta. Inténtalo de nuevo.",
+            variant: "destructive",
+          });
+        return;
+      }
+
+      try {
+        await sendEmail('empresas', {
+          name: formData.name.trim(),
+          company: formData.company.trim(),
+          email: formData.email.trim().toLowerCase(),
+          role: formData.role.trim(),
+          needs: formData.needs.trim(),
+        });
+    } catch (emailError) {
+          console.error('Error enviando email de confirmación:', emailError);
+    }
+    
+    toast({
+      title: `¡Gracias ${formData.name}!`,
+      description: "Tu solicitud ha sido enviada correctamente. Te redirigimos a nuestro calendario para que puedas agendar la llamada. También recibirás un email de confirmación.",
+    });
+
+      // Limpiar formulario
+      setFormData({
+        company: '',
+        name: '',
+        email: '',
+        role: '',
+        needs: '',
+      });
+
+      // Redirigir al calendario (pequeño delay para ver el toast)
+      setTimeout(() => {
+        window.open('https://calendar.app.google/XqUmUcgMq8ozc8dD9', '_blank');
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema enviando tu solicitud. Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const services = [
@@ -422,6 +514,7 @@ export default function EmpresasPage() {
                       onChange={(e) => setFormData({...formData, company: e.target.value})}
                       placeholder="Nombre de tu empresa"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
@@ -431,6 +524,7 @@ export default function EmpresasPage() {
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                       placeholder="Tu nombre completo"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -444,6 +538,7 @@ export default function EmpresasPage() {
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                       placeholder="tu@empresa.com"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
@@ -453,6 +548,7 @@ export default function EmpresasPage() {
                       onChange={(e) => setFormData({...formData, role: e.target.value})}
                       placeholder="CTO, HR Director, etc."
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -465,6 +561,7 @@ export default function EmpresasPage() {
                     placeholder="Describe tu necesidad: hiring, training, consulting..."
                     rows={4}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
 {/* 
@@ -475,6 +572,7 @@ export default function EmpresasPage() {
                     onChange={(e) => setFormData({...formData, timeline: e.target.value})}
                     placeholder="¿Cuándo necesitas implementar?"
                     required
+                    disabled={isSubmitting}
                   />
                 </div> */}
 
@@ -482,9 +580,19 @@ export default function EmpresasPage() {
                   type="submit" 
                   size="lg" 
                   className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
+                  disabled={isSubmitting}
                 >
-                  Solicitar llamada de descubrimiento
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    <>
+                      Solicitar llamada de descubrimiento
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>

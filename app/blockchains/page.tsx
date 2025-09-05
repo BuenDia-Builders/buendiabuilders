@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
+import { sendEmail } from '@/lib/email-service';
 import { 
   Network, 
   Users, 
@@ -20,12 +22,15 @@ import {
   Zap, 
   Award, 
   BarChart3,
-  ArrowUp
+  ArrowUp,
+  Loader2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { supabase, type BlockchainInquiry } from '@/lib/supabase';
 
 export default function BlockchainsPage() {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     protocol: '',
     name: '',
@@ -35,6 +40,7 @@ export default function BlockchainsPage() {
     budget: '',
   });
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Monitor scroll position for scroll-to-top button
   useEffect(() => {
@@ -46,9 +52,95 @@ export default function BlockchainsPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Blockchain inquiry:', formData);
+    setIsSubmitting(true);
+
+    try {
+      if (!formData.protocol || !formData.name || !formData.email || !formData.role || !formData.goals) {
+        toast({
+          title: "Error de validación",
+          description: "Por favor, completa todos los campos obligatorios",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: "Email inválido",
+          description: "Por favor, ingresa un email válido",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Insertar en Supabase
+      const { data, error } = await supabase
+        .from('blockchain_inquiries')
+        .insert([
+          {
+            protocol: formData.protocol.trim(),
+            name: formData.name.trim(),
+            email: formData.email.trim().toLowerCase(),
+            role: formData.role.trim(),
+            goals: formData.goals.trim(),
+            budget: formData.budget.trim() || null,
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error al guardar:', error);
+          toast({
+            title: "Error al enviar",
+            description: "Error al enviar la consulta. Inténtalo de nuevo.",
+            variant: "destructive",
+          });
+        return;
+      }
+      try {
+        await sendEmail('blockchains', {
+          name: formData.name.trim(),
+          protocol: formData.protocol.trim(),
+          email: formData.email.trim().toLowerCase(),
+          role: formData.role.trim(),
+          goals: formData.goals.trim(),
+          budget: formData.budget.trim() || null,
+        });
+      } catch (emailError) {
+        console.error('Error enviando email de confirmación:', emailError);
+      }
+
+      toast({
+        title: "¡Éxito!",
+        description: "¡Consulta enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
+      });
+
+      // Limpiar formulario
+      setFormData({
+        protocol: '',
+        name: '',
+        email: '',
+        role: '',
+        goals: '',
+        budget: '',
+      });
+
+
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema enviando tu solicitud. Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Function to scroll to form section
@@ -166,7 +258,7 @@ export default function BlockchainsPage() {
       category: 'DeFi',
       items: [
         { name: 'Uniswap', logo: '🦄', description: 'DEX protocol' },
-        { name: 'Compound', logo: '🏛️', description: 'Lending protocol' },
+        { name: 'Compound', logo: '🛏️', description: 'Lending protocol' },
         { name: 'Synthetix', logo: '⚡', description: 'Synthetic assets' },
         { name: 'Chainlink', logo: '🔗', description: 'Oracle network' },
       ],
@@ -185,7 +277,7 @@ export default function BlockchainsPage() {
       items: [
         { name: 'Immutable X', logo: '🎮', description: 'Gaming NFTs' },
         { name: 'Axie Infinity', logo: '🐾', description: 'Play-to-earn' },
-        { name: 'The Sandbox', logo: '🏖️', description: 'Virtual worlds' },
+        { name: 'The Sandbox', logo: '🖥️', description: 'Virtual worlds' },
         { name: 'Enjin', logo: '💎', description: 'Gaming platform' },
       ],
     },
@@ -387,53 +479,68 @@ export default function BlockchainsPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Protocolo/Proyecto</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Protocolo/Proyecto <span className="text-red-500">*</span>
+                    </label>
                     <Input
                       value={formData.protocol}
                       onChange={(e) => setFormData({ ...formData, protocol: e.target.value })}
                       placeholder="Nombre de tu protocolo"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Tu nombre</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Tu nombre <span className="text-red-500">*</span>
+                    </label>
                     <Input
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Tu nombre completo"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Email <span className="text-red-500">*</span>
+                    </label>
                     <Input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="tu@protocolo.com"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Tu rol</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Tu rol <span className="text-red-500">*</span>
+                    </label>
                     <Input
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                       placeholder="DevRel, BD, etc."
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Objetivos en LATAM</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Objetivos en LATAM <span className="text-red-500">*</span>
+                  </label>
                   <Textarea
                     value={formData.goals}
                     onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
                     placeholder="¿Qué buscas lograr en la región? Developer adoption, community growth, partnerships..."
                     rows={4}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div>
@@ -442,15 +549,26 @@ export default function BlockchainsPage() {
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                     placeholder="Rango de investment para el programa"
+                    disabled={isSubmitting}
                   />
                 </div>
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:from-teal-600 hover:to-blue-600 transition-all duration-300"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:from-teal-600 hover:to-blue-600 transition-all duration-300 disabled:opacity-50"
                 >
-                  Solicitar programa customizado
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    <>
+                      Solicitar programa customizado
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>

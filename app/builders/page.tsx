@@ -6,6 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { sendEmail } from '@/lib/email-service';
 import {
   Code2,
   Rocket,
@@ -18,12 +20,13 @@ import {
   Target,
   Brain,
   Heart,
-  ArrowUp
+  ArrowUp,
+  Loader2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { supabase, type ApplicationFormData } from '@/lib/supabase';
 
-// acordeón de shadcn/ui
 import {
   Accordion,
   AccordionItem,
@@ -33,39 +36,239 @@ import {
 
 export default function BuildersPage() {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
-    experience: '',
-    motivation: '',
-    portfolio: '',
+    technicalExperience: '',
+    whyWeb3: '',
+    portfolioGithub: '',
+    accessCode: '',
   });
 
-  const [isVisible, setIsVisible] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Monitor scroll position for scroll-to-top button
   useEffect(() => {
-    const toggleVisibility = () => {
-      setIsVisible(window.scrollY > 300);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
     };
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  // Función para hacer scroll al formulario
-  const scrollToForm = () => {
-    const formSection = document.getElementById('application-form');
-    if (formSection) {
-      formSection.scrollIntoView({ behavior: 'smooth' });
+    try {
+      if (!formData.fullName || !formData.email || !formData.technicalExperience || !formData.whyWeb3) {
+        toast({
+          title: "Error de validación",
+          description: "Por favor, completa todos los campos obligatorios",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: "Email inválido",
+          description: "Por favor, ingresa un email válido",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const hasAccessCode = formData.accessCode.trim() !== '';
+      
+      // Si hay código de acceso, verificar disponibilidad y registrar uso
+      if (hasAccessCode) {
+        const accessCode = formData.accessCode.trim();
+        const userEmail = formData.email.trim().toLowerCase();
+        
+        // Buscar TODOS los registros con este código
+        const { data: codeResults, error: codeCheckError } = await supabase
+          .from('access_code_usage')
+          .select('*')
+          .eq('code', accessCode);
+          
+        if (codeCheckError) {
+          toast({
+            title: "Error con código de acceso",
+            description: "No se pudo verificar el código de acceso",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (!codeResults || codeResults.length === 0) {
+          toast({
+            title: "Código inválido",
+            description: "El código de acceso no existe",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Verificar si este email YA usó este código
+        const emailAlreadyUsed = codeResults.some(record => record.email === userEmail);
+        
+        if (emailAlreadyUsed) {
+          toast({
+            title: "Código ya usado",
+            description: "Este email ya utilizó este código de acceso",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Contar cuántos emails DIFERENTES han usado este código
+        const uniqueEmailsUsed = new Set(codeResults.map(record => record.email)).size;
+        const maxUses = codeResults[0].max_uses; // Máximo de emails diferentes permitidos
+        
+        if (uniqueEmailsUsed >= maxUses) {
+          toast({
+            title: "Código agotado",
+            description: `Este código ya fue usado por ${maxUses} usuarios diferentes`,
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Crear nueva entrada para este email (1 uso por email)
+        const { error: createCodeError } = await supabase
+          .from('access_code_usage')
+          .insert([{
+            code: accessCode,
+            email: userEmail,
+            current_uses: 1, // Siempre 1 porque cada email solo puede usar 1 vez
+            max_uses: maxUses,
+            used_at: new Date().toISOString()
+          }]);
+          
+        if (createCodeError) {
+
+          // Si es error de duplicado (email ya existe para este código)
+          if (createCodeError.code === '23505') {
+            toast({
+              title: "Código ya usado",
+              description: "Este email ya utilizó este código de acceso",
+              variant: "destructive",
+            });
+          } else {
+            toast({
+              title: "Error con código de acceso",
+              description: "No se pudo registrar el uso del código",
+              variant: "destructive",
+            });
+          }
+          return;
+        }
+      }
+
+      // Insertar aplicación en Supabase
+      const { data, error } = await supabase
+        .from('applications')
+        .insert([
+          {
+            full_name: formData.fullName.trim(),
+            email: formData.email.trim().toLowerCase(),
+            technical_experience: formData.technicalExperience.trim(),
+            why_web3: formData.whyWeb3.trim(),
+            portfolio_github: formData.portfolioGithub.trim() || null,
+            has_access_code: hasAccessCode,
+          }
+        ])
+        .select()
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error al guardar:', error);
+        console.error('Error message:', error.message);
+        console.error('Error details:', error.details);
+        
+        // Manejar errores específicos
+        if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+          toast({
+            title: "Email duplicado",
+            description: "Ya existe una aplicación con este email",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error al enviar",
+            description: error.message || "Error al enviar la aplicación. Inténtalo de nuevo.",
+            variant: "destructive",
+          });
+        }
+        return;
+      }
+    try {
+      await sendEmail('builders', {
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        hasAccessCode: hasAccessCode,
+        technicalExperience: formData.technicalExperience.trim(),
+        whyWeb3: formData.whyWeb3.trim(),
+      });
+    } catch (emailError) {
+      console.error('Error enviando email de confirmación:', emailError);
+      // El email falló pero la aplicación se guardó, continuar
+    }
+    
+    toast({
+      title: "¡Éxito!",
+      description: hasAccessCode 
+        ? "Felicitaciones! tenés acceso privilegiado a nuestro programa, te contactaremos pronto y recibirás un email de confirmación." 
+        : "¡Aplicación enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
+    });
+
+      // Limpiar formulario
+      setFormData({
+        fullName: '',
+        email: '',
+        technicalExperience: '',
+        whyWeb3: '',
+        portfolioGithub: '',
+        accessCode: '',
+      });
+
+
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema enviando tu aplicación. Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Builder application:', formData);
+  // Function to scroll to form section
+  const scrollToForm = () => {
+    const formSection = document.getElementById('application-form');
+    if (formSection) {
+      formSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+  // Function to scroll to top
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   const journey = [
@@ -118,7 +321,7 @@ export default function BuildersPage() {
     },
     {
       question: '¿Qué nivel técnico necesito?',
-      answer: 'Buscamos programadoras con experiencia . No necesitas conocimiento previo en Web3, eso lo enseñamos.',
+      answer: 'Buscamos programadoras con experiencia. No necesitas conocimiento previo en Web3, eso lo enseñamos.',
     },
     {
       question: '¿Cómo es el proceso de selección?',
@@ -151,11 +354,10 @@ export default function BuildersPage() {
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               Programa intensivo y gratuito que te transforma de <br />Programadora Web2 a Programadora Web3
             </p>
-            {/* El botón ahora tiene un onClick que llama a la función scrollToForm */}
             <Button
               size="lg"
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white"
               onClick={scrollToForm}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
             >
               Aplicar ahora
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -180,9 +382,15 @@ export default function BuildersPage() {
 
             <div className="space-y-16">
               {journey.map((step, index) => (
-                <div key={index} className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                >
                   <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
-                    <Card className="group hover:shadow-xl transition-all duration-300">
+                    <Card className="group hover:shadow-xl transition-all duration-300 border-border/50">
                       <CardContent className="p-8">
                         <Badge className={`mb-4 bg-gradient-to-r ${step.gradient} text-white`}>
                           {step.phase}
@@ -201,7 +409,7 @@ export default function BuildersPage() {
                   </div>
 
                   <div className="w-1/2" />
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -209,7 +417,6 @@ export default function BuildersPage() {
       </section>
 
       {/* Application Form */}
-      {/* Se añadió el ID 'application-form' a esta sección */}
       <section id="application-form" className="py-24 bg-gradient-to-b from-background to-muted/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -228,64 +435,97 @@ export default function BuildersPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Nombre completo</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Nombre completo <span className="text-red-500">*</span>
+                    </label>
                     <Input
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      placeholder="Tu nombre"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      placeholder="Tu nombre completo"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Email <span className="text-red-500">*</span>
+                    </label>
                     <Input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="tu@email.com"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Experiencia técnica</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Experiencia técnica <span className="text-red-500">*</span>
+                  </label>
                   <Textarea
-                    value={formData.experience}
-                    onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                    placeholder="Cuéntanos sobre tu background técnico, lenguajes, frameworks..."
+                    value={formData.technicalExperience}
+                    onChange={(e) => setFormData({ ...formData, technicalExperience: e.target.value })}
+                    placeholder="Cuéntanos sobre tu background técnico, lenguajes, frameworks, años de experiencia..."
                     rows={4}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">¿Por qué Web3?</label>
+                  <label className="block text-sm font-medium mb-2">
+                    ¿Por qué Web3? <span className="text-red-500">*</span>
+                  </label>
                   <Textarea
-                    value={formData.motivation}
-                    onChange={(e) => setFormData({...formData, motivation: e.target.value})}
-                    placeholder="¿Qué te motiva a hacer el cambio a Web3?"
+                    value={formData.whyWeb3}
+                    onChange={(e) => setFormData({ ...formData, whyWeb3: e.target.value })}
+                    placeholder="¿Qué te motiva a hacer el cambio a Web3? ¿Qué esperas lograr?"
                     rows={4}
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Portfolio/GitHub</label>
                   <Input
-                    value={formData.portfolio}
-                    onChange={(e) => setFormData({...formData, portfolio: e.target.value})}
-                    placeholder="https://github.com/tuusername"
+                    value={formData.portfolioGithub}
+                    onChange={(e) => setFormData({ ...formData, portfolioGithub: e.target.value })}
+                    placeholder="https://github.com/tuusername o tu portfolio"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Código de acceso</label>
+                  <Input
+                    value={formData.accessCode}
+                    onChange={(e) => setFormData({ ...formData, accessCode: e.target.value })}
+                    placeholder="Si no tenés código no te preocupes!"
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300 disabled:opacity-50"
                 >
-                  Enviar aplicación
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando aplicación...
+                    </>
+                  ) : (
+                    <>
+                      Enviar aplicación
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>
@@ -305,7 +545,11 @@ export default function BuildersPage() {
 
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg">
+              <AccordionItem 
+                key={index} 
+                value={`item-${index}`} 
+                className="border rounded-lg hover:shadow-md transition-shadow"
+              >
                 <AccordionTrigger className="px-6 py-4 text-left text-lg font-semibold hover:bg-muted/30 transition">
                   {faq.question}
                 </AccordionTrigger>
@@ -318,16 +562,15 @@ export default function BuildersPage() {
         </div>
       </section>
 
-      {/* Botón Scroll To Top */}
-      {isVisible && (
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <Button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+          size="icon"
+          className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 hover:scale-110"
         >
-          <ArrowUp size={24} />
-        </motion.button>
+          <ArrowUp className="h-4 w-4" />
+        </Button>
       )}
     </div>
   );

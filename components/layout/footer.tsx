@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 // TikTok icon component (since it's not in lucide-react)
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
   </svg>
 );
 
@@ -48,50 +48,29 @@ export function Footer() {
 
   const connectLinks = [
     { label: 'Formulario de Aplicación', href: './builders#application-form' },
-    { label: 'Información para Patrocinadores', href: './blockchains#partnership-form', highlight: true  },
+    { label: 'Información para Patrocinadores', href: './blockchains#partnership-form', highlight: true },
     { label: 'Contacto', href: 'mailto:buendiabuilders@gmail.com' },
   ];
 
   const socialLinks = [
-    { 
-      icon: Twitter, 
-      href: 'https://x.com/buendiabuilders', 
-      label: 'X (Twitter)', 
+    {
+      icon: Twitter,
+      href: 'https://x.com/buendiabuilders',
+      label: 'X (Twitter)',
       description: 'Síguenos en X',
       gradient: 'from-black to-gray-600'
     },
-    { 
-      icon: Instagram, 
-      href: 'https://www.instagram.com/buendiabuilders/', 
-      label: 'Instagram', 
-      description: 'Nuestras historias visuales',
-      gradient: 'from-pink-500 to-purple-500'
-    },
-    { 
-      icon: TikTokIcon, 
-      href: 'https://www.tiktok.com/@buendiabuilders', 
-      label: 'TikTok', 
-      description: 'Contenido dinámico',
-      gradient: 'from-black to-red-500'
-    },
-        { 
-      icon: Youtube, 
-      href: 'https://www.youtube.com/channel/UCHkKjB4IiLSj6z3XkqGbgkg', 
-      label: 'YouTube', 
+    {
+      icon: Youtube,
+      href: 'https://www.youtube.com/channel/UCHkKjB4IiLSj6z3XkqGbgkg',
+      label: 'YouTube',
       description: 'Videos y tutoriales',
       gradient: 'from-red-500 to-red-700'
     },
-    { 
-      icon: Linkedin, 
-      href: 'https://www.linkedin.com/company/buen-dia-builders/', 
-      label: 'LinkedIn', 
-      description: 'Red profesional',
-      gradient: 'from-blue-600 to-blue-800'
-    },
-    { 
-      icon: Github, 
-      href: 'https://github.com/BuenDia-Builders', 
-      label: 'GitHub', 
+    {
+      icon: Github,
+      href: 'https://github.com/BuenDia-Builders',
+      label: 'GitHub',
       description: 'Explora nuestros proyectos',
       gradient: 'from-gray-700 to-gray-900'
     },
@@ -151,9 +130,9 @@ export function Footer() {
                 </a>
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
                   <div className={`w-2 h-2 rounded-full mr-2 ${link.status === 'active' ? 'bg-green-500' :
-                      link.status === 'online' ? 'bg-blue-500 animate-pulse' :
-                        link.status === 'recent' ? 'bg-yellow-500' :
-                          'bg-gray-400 dark:bg-gray-600'
+                    link.status === 'online' ? 'bg-blue-500 animate-pulse' :
+                      link.status === 'recent' ? 'bg-yellow-500' :
+                        'bg-gray-400 dark:bg-gray-600'
                     }`} />
                   {link.description}
                 </div>

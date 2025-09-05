@@ -13,6 +13,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Buen Día Builders - Ecosistema Web3 LATAM',
   description: 'Conectamos Builders, Empresas y Blockchains para crear el futuro Web3 en LATAM',
+  icons: {
+    icon: '/LogoBDB_alone.png',
+  },
 };
 
 export default function RootLayout({

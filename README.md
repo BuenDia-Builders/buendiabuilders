@@ -1,1 +1,1 @@
-esta mergea supabase.
+esta mergea supabase, mergea

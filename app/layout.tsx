@@ -6,6 +6,7 @@ import { LanguageProvider } from '@/components/providers/language-provider';
 import { Navbar } from '@/components/layout/navbar';
 import { FloatingElements } from '@/components/ui/floating-elements';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
+import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
             <main className="relative z-10">
               {children}
             </main>
+            <Toaster />
           </LanguageProvider>
         </ThemeProvider>
       </body>

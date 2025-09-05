@@ -5,10 +5,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/components/providers/language-provider';
 import {
-  Github, Twitter, Linkedin, Mail, Calendar, Code, Users, Heart, ExternalLink
+  Github, Twitter, Linkedin, Mail, Calendar, Code, Users, Heart, ExternalLink, Instagram, Youtube
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+
+// TikTok icon component (since it's not in lucide-react)
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+  </svg>
+);
 
 export function Footer() {
   const { t } = useLanguage();
@@ -22,14 +29,14 @@ export function Footer() {
 
   const communityLinks = [
     { label: 'Enviar mensaje', href: 'mailto:hola@buendiabuilders.com', description: 'Contáctanos por correo', status: 'active' },
-    { label: 'LinkedIn', href: 'https://linkedin.com/company/buendiabuilders', description: 'Conecta con nuestra red profesional', status: 'online' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/buen-dia-builders/', description: 'Conecta con nuestra red profesional', status: 'online' },
     { label: 'Telegram', href: '#', description: 'Participa en nuestras conversaciones', status: 'active' },
     { label: 'Discord', href: '#', description: 'Únete a nuestros canales de discusión', status: 'online' },
   ];
 
   const resourceLinks = [
     { label: 'Kit de Herramientas para Builders', href: '#', isNew: true },
-    { label: 'Calendario de Eventos', href: '#' },
+    { label: 'Calendario de Eventos', href: 'https://luma.com/user/buendiabuilders' },
     { label: 'Ruta de Aprendizaje', href: '#' },
   ];
 
@@ -40,14 +47,54 @@ export function Footer() {
   ];
 
   const connectLinks = [
-    { label: 'Formulario de Aplicación', href: '#', highlight: true },
-    { label: 'Información para Patrocinadoras', href: '#' },
-    { label: 'Contacto', href: '#' },
+    { label: 'Formulario de Aplicación', href: './builders#application-form' },
+    { label: 'Información para Patrocinadores', href: './blockchains#partnership-form', highlight: true  },
+    { label: 'Contacto', href: 'mailto:buendiabuilders@gmail.com' },
   ];
 
   const socialLinks = [
-    { icon: Twitter, href: 'https://x.com/buendiabuilders', label: 'X (Twitter)', description: 'Síguenos en X' },
-    { icon: Github, href: 'https://github.com/buendiabuilders', label: 'GitHub', description: 'Explora nuestros proyectos' },
+    { 
+      icon: Twitter, 
+      href: 'https://x.com/buendiabuilders', 
+      label: 'X (Twitter)', 
+      description: 'Síguenos en X',
+      gradient: 'from-black to-gray-600'
+    },
+    { 
+      icon: Instagram, 
+      href: 'https://www.instagram.com/buendiabuilders/', 
+      label: 'Instagram', 
+      description: 'Nuestras historias visuales',
+      gradient: 'from-pink-500 to-purple-500'
+    },
+    { 
+      icon: TikTokIcon, 
+      href: 'https://www.tiktok.com/@buendiabuilders', 
+      label: 'TikTok', 
+      description: 'Contenido dinámico',
+      gradient: 'from-black to-red-500'
+    },
+        { 
+      icon: Youtube, 
+      href: 'https://www.youtube.com/channel/UCHkKjB4IiLSj6z3XkqGbgkg', 
+      label: 'YouTube', 
+      description: 'Videos y tutoriales',
+      gradient: 'from-red-500 to-red-700'
+    },
+    { 
+      icon: Linkedin, 
+      href: 'https://www.linkedin.com/company/buen-dia-builders/', 
+      label: 'LinkedIn', 
+      description: 'Red profesional',
+      gradient: 'from-blue-600 to-blue-800'
+    },
+    { 
+      icon: Github, 
+      href: 'https://github.com/BuenDia-Builders', 
+      label: 'GitHub', 
+      description: 'Explora nuestros proyectos',
+      gradient: 'from-gray-700 to-gray-900'
+    },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -202,7 +249,7 @@ export function Footer() {
             <Mail className="w-5 h-5 mr-2 text-cyan-500 dark:text-cyan-400" />
             Social
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {socialLinks.map((social, index) => {
               const Icon = social.icon;
               return (
@@ -211,14 +258,18 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center space-x-3 p-3 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-all"
+                  className="group flex items-center space-x-3 p-3 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-all transform hover:scale-105"
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded flex items-center justify-center">
+                  <div className={`w-8 h-8 bg-gradient-to-br ${social.gradient} rounded flex items-center justify-center shadow-lg`}>
                     <Icon className="w-4 h-4 text-white" />
                   </div>
-                  <div>
-                    <div className="font-semibold text-sm group-hover:text-blue-500 dark:group-hover:text-blue-400">{social.label}</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">{social.description}</div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-sm group-hover:text-blue-500 dark:group-hover:text-blue-400">
+                      {social.label}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                      {social.description}
+                    </div>
                   </div>
                 </a>
               );

@@ -4,8 +4,11 @@ import { useLanguage } from '@/components/providers/language-provider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MapPin, Send } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { sendEmail } from '@/lib/email-service';
+import { MapPin, Send, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 const cities = [
   { name: 'Buenos Aires', country: 'Argentina', active: true },
@@ -20,14 +23,87 @@ const cities = [
 
 export function CitiesSection() {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [city, setCity] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Interest submitted:', { email, city });
-    setEmail('');
-    setCity('');
+    setIsSubmitting(true);
+
+    try {
+      if (!email || !city) {
+        toast({
+          title: "Error de validación",
+          description: "Por favor, completa todos los campos",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validar formato de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        toast({
+          title: "Email inválido",
+          description: "Por favor, ingresa un email válido",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Insertar en Supabase
+      const { data, error } = await supabase
+        .from('city_interests')
+        .insert([
+          {
+            email: email.trim().toLowerCase(),
+            city: city.trim(),
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error al guardar:', error);
+        toast({
+          title: "Error al enviar",
+          description: "Error al enviar la solicitud. Inténtalo de nuevo.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Enviar email de confirmación
+      try {
+        await sendEmail('cities', {
+          email: email.trim().toLowerCase(),
+          city: city.trim(),
+        });
+      } catch (emailError) {
+        console.error('Error enviando email de confirmación:', emailError);
+      }
+
+      toast({
+        title: "¡Éxito!",
+        description: "¡Solicitud enviada exitosamente! Te contactaremos cuando lleguemos a tu ciudad y recibirás un email de confirmación.",
+      });
+
+      // Limpiar formulario
+      setEmail('');
+      setCity('');
+
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Hubo un problema enviando tu solicitud. Por favor intenta nuevamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -97,6 +173,9 @@ export function CitiesSection() {
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Email <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     type="email"
                     placeholder="tu@email.com"
@@ -104,10 +183,14 @@ export function CitiesSection() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 
                 <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Tu ciudad <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     type="text"
                     placeholder="Tu ciudad"
@@ -115,6 +198,7 @@ export function CitiesSection() {
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
                 
@@ -122,9 +206,19 @@ export function CitiesSection() {
                   type="submit"
                   className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
                   size="lg"
+                  disabled={isSubmitting}
                 >
-                  Notificarme cuando esté disponible
-                  <Send className="ml-2 h-4 w-4" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    <>
+                      Notificarme cuando esté disponible
+                      <Send className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
               </form>
               

@@ -128,25 +128,25 @@ function generateBuildersEmail(data: BuildersEmailData): string {
         
         <div class="content">
           <h2>¿Qué sigue ahora?</h2>
-          <p>Hemos recibido tu aplicación y nuestro equipo la revisará en las próximas 48 horas.</p>
+          <p>Hemos recibido tu aplicación y ahora comienza nuestro proceso de selección.</p>
           
-          <h3>Timeline del proceso:</h3>
+          <div class="highlight-box">
+            <strong>📅 La semana que viene te llegará la confirmación de acceso al programa si quedaste seleccionada.</strong>
+          </div>
+
+          <h3>Proceso de selección:</h3>
           <ul>
-            <li><strong>Hoy:</strong> Aplicación recibida ✅</li>
-            <li><strong>2-3 días:</strong> Revisión de perfil</li>
-            <li><strong>5-7 días:</strong> Entrevista técnica (si calificas)</li>
-            <li><strong>2 semanas:</strong> Decisión final</li>
+            <li><strong>Esta semana:</strong> Revisión técnica de tu GitHub y perfil</li>
+            <li><strong>Próxima semana:</strong> Decisión final y notificación</li>
+            <li><strong>Si quedas seleccionada:</strong> Onboarding y acceso al programa</li>
           </ul>
 
-          ${data.hasAccessCode ? 
-            '<div class="highlight-box"><strong>🎯 Código de acceso detectado:</strong> Tu aplicación tiene prioridad en el proceso de selección.</div>' 
-            : ''}
-
           <h3>Mientras esperas:</h3>
-          <p>Te recomendamos revisar nuestros recursos preparatorios:</p>
+          <p>Te recomendamos seguir nuestras redes sociales para mantenerte al día:</p>
           <div style="text-align: center; margin: 20px 0;">
-            <a href="#" class="button">Recursos Web3 📚</a>
-            <a href="#" class="button">Únete a Discord 💬</a>
+            <a href="https://x.com/buendiabuilders" class="button">Síguenos en X 🐦</a>
+            <a href="https://www.linkedin.com/company/buen-dia-builders" class="button">LinkedIn 💼</a>
+            <a href="https://www.instagram.com/buendia_builders/" class="button">Instagram 📸</a>
           </div>
         </div>
 

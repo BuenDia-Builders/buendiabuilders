@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { sendEmail } from '@/lib/email-service';
 import {
@@ -15,17 +16,19 @@ import {
   BookOpen,
   Award,
   ArrowRight,
-  CheckCircle,
-  Zap,
-  Target,
-  Brain,
-  Heart,
   ArrowUp,
-  Loader2
+  Loader2,
+  MapPin,
+  Calendar,
+  ExternalLink,
+  Github,
+  Twitter,
+  Linkedin,
+  Instagram
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { supabase, type ApplicationFormData } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 
 import {
   Accordion,
@@ -41,10 +44,13 @@ export default function BuildersPage() {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    technicalExperience: '',
-    whyWeb3: '',
-    portfolioGithub: '',
-    accessCode: '',
+    githubUrl: '',
+    fullAddress: '',
+    novemberCommitment: false,
+    twitterX: '',
+    linkedin: '',
+    instagram: '',
+    followOurSocials: false,
   });
 
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -60,197 +66,132 @@ export default function BuildersPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      if (!formData.fullName || !formData.email || !formData.technicalExperience || !formData.whyWeb3) {
-        toast({
-          title: "Error de validación",
-          description: "Por favor, completa todos los campos obligatorios",
-          variant: "destructive",
-        });
-        return;
-      }
+  try {
+    // Validación de campos obligatorios
+    if (!formData.fullName || !formData.email || !formData.githubUrl || !formData.fullAddress) {
+      toast({
+        title: "Error de validación",
+        description: "Por favor, completa todos los campos obligatorios",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      // Validar formato de email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        toast({
-          title: "Email inválido",
-          description: "Por favor, ingresa un email válido",
-          variant: "destructive",
-        });
-        return;
-      }
+    // Validar compromisos obligatorios
+    if (!formData.novemberCommitment || !formData.followOurSocials) {
+      toast({
+        title: "Error de validación",
+        description: "Debes aceptar ambos compromisos para continuar",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      const hasAccessCode = formData.accessCode.trim() !== '';
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Email inválido",
+        description: "Por favor, ingresa un email válido",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validar que GitHub URL sea válida
+    const githubRegex = /^https:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/;
+    if (!githubRegex.test(formData.githubUrl)) {
+      toast({
+        title: "GitHub URL inválida",
+        description: "Por favor, ingresa una URL válida de GitHub (ej: https://github.com/username)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Insertar aplicación en la NUEVA tabla Supabase
+    const { data, error } = await supabase
+      .from('builders_applications') // ← NUEVA TABLA
+      .insert([
+        {
+          full_name: formData.fullName.trim(),
+          email: formData.email.trim().toLowerCase(),
+          github_url: formData.githubUrl.trim(),
+          full_address: formData.fullAddress.trim(),
+          november_commitment: formData.novemberCommitment,
+          twitter_x: formData.twitterX.trim() || null,
+          linkedin: formData.linkedin.trim() || null,
+          instagram: formData.instagram.trim() || null,
+          follow_our_socials: formData.followOurSocials,
+        }
+      ])
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error al guardar:', error);
       
-      // Si hay código de acceso, verificar disponibilidad y registrar uso
-      if (hasAccessCode) {
-        const accessCode = formData.accessCode.trim();
-        const userEmail = formData.email.trim().toLowerCase();
-        
-        // Buscar TODOS los registros con este código
-        const { data: codeResults, error: codeCheckError } = await supabase
-          .from('access_code_usage')
-          .select('*')
-          .eq('code', accessCode);
-          
-        if (codeCheckError) {
-          toast({
-            title: "Error con código de acceso",
-            description: "No se pudo verificar el código de acceso",
-            variant: "destructive",
-          });
-          return;
-        }
-        
-        if (!codeResults || codeResults.length === 0) {
-          toast({
-            title: "Código inválido",
-            description: "El código de acceso no existe",
-            variant: "destructive",
-          });
-          return;
-        }
-        
-        // Verificar si este email YA usó este código
-        const emailAlreadyUsed = codeResults.some(record => record.email === userEmail);
-        
-        if (emailAlreadyUsed) {
-          toast({
-            title: "Código ya usado",
-            description: "Este email ya utilizó este código de acceso",
-            variant: "destructive",
-          });
-          return;
-        }
-        
-        // Contar cuántos emails DIFERENTES han usado este código
-        const uniqueEmailsUsed = new Set(codeResults.map(record => record.email)).size;
-        const maxUses = codeResults[0].max_uses; // Máximo de emails diferentes permitidos
-        
-        if (uniqueEmailsUsed >= maxUses) {
-          toast({
-            title: "Código agotado",
-            description: `Este código ya fue usado por ${maxUses} usuarios diferentes`,
-            variant: "destructive",
-          });
-          return;
-        }
-        
-        // Crear nueva entrada para este email (1 uso por email)
-        const { error: createCodeError } = await supabase
-          .from('access_code_usage')
-          .insert([{
-            code: accessCode,
-            email: userEmail,
-            current_uses: 1, // Siempre 1 porque cada email solo puede usar 1 vez
-            max_uses: maxUses,
-            used_at: new Date().toISOString()
-          }]);
-          
-        if (createCodeError) {
-
-          // Si es error de duplicado (email ya existe para este código)
-          if (createCodeError.code === '23505') {
-            toast({
-              title: "Código ya usado",
-              description: "Este email ya utilizó este código de acceso",
-              variant: "destructive",
-            });
-          } else {
-            toast({
-              title: "Error con código de acceso",
-              description: "No se pudo registrar el uso del código",
-              variant: "destructive",
-            });
-          }
-          return;
-        }
+      if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+        toast({
+          title: "Email duplicado",
+          description: "Ya existe una aplicación con este email",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error al enviar",
+          description: error.message || "Error al enviar la aplicación. Inténtalo de nuevo.",
+          variant: "destructive",
+        });
       }
+      return;
+    }
 
-      // Insertar aplicación en Supabase
-      const { data, error } = await supabase
-        .from('applications')
-        .insert([
-          {
-            full_name: formData.fullName.trim(),
-            email: formData.email.trim().toLowerCase(),
-            technical_experience: formData.technicalExperience.trim(),
-            why_web3: formData.whyWeb3.trim(),
-            portfolio_github: formData.portfolioGithub.trim() || null,
-            has_access_code: hasAccessCode,
-          }
-        ])
-        .select()
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error al guardar:', error);
-        console.error('Error message:', error.message);
-        console.error('Error details:', error.details);
-        
-        // Manejar errores específicos
-        if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
-          toast({
-            title: "Email duplicado",
-            description: "Ya existe una aplicación con este email",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error al enviar",
-            description: error.message || "Error al enviar la aplicación. Inténtalo de nuevo.",
-            variant: "destructive",
-          });
-        }
-        return;
-      }
+    // Enviar email de confirmación
     try {
       await sendEmail('builders', {
         fullName: formData.fullName.trim(),
         email: formData.email.trim().toLowerCase(),
-        hasAccessCode: hasAccessCode,
-        technicalExperience: formData.technicalExperience.trim(),
-        whyWeb3: formData.whyWeb3.trim(),
+        githubUrl: formData.githubUrl.trim(),
+        fullAddress: formData.fullAddress.trim(),
       });
     } catch (emailError) {
       console.error('Error enviando email de confirmación:', emailError);
-      // El email falló pero la aplicación se guardó, continuar
     }
     
     toast({
       title: "¡Éxito!",
-      description: hasAccessCode 
-        ? "Felicitaciones! tenés acceso privilegiado a nuestro programa, te contactaremos pronto y recibirás un email de confirmación." 
-        : "¡Aplicación enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
+      description: "¡Aplicación enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
     });
 
-      // Limpiar formulario
-      setFormData({
-        fullName: '',
-        email: '',
-        technicalExperience: '',
-        whyWeb3: '',
-        portfolioGithub: '',
-        accessCode: '',
-      });
+    // Limpiar formulario
+    setFormData({
+      fullName: '',
+      email: '',
+      githubUrl: '',
+      fullAddress: '',
+      novemberCommitment: false,
+      twitterX: '',
+      linkedin: '',
+      instagram: '',
+      followOurSocials: false,
+    });
 
-
-    } catch (error) {
-      console.error('Error:', error);
-      toast({
-        title: "Error",
-        description: "Hubo un problema enviando tu aplicación. Por favor intenta nuevamente.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    toast({
+      title: "Error",
+      description: "Hubo un problema enviando tu aplicación. Por favor intenta nuevamente.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   // Function to scroll to form section
   const scrollToForm = () => {
@@ -275,39 +216,39 @@ export default function BuildersPage() {
     {
       phase: 'Aplicación',
       title: 'Completa tu perfil',
-      description: 'Hablemos sobre tu experiencia y motivación',
+      description: 'Formulario con tus datos y redes sociales',
       icon: Code2,
       gradient: 'from-blue-500 to-cyan-500',
-      duration: '1 día',
+      duration: '10 min',
     },
     {
       phase: 'Selección',
-      title: 'Entrevista técnica',
-      description: 'Assessment de habilidades y fit cultural',
+      title: 'Selección técnica',
+      description: 'Revisión de github y/o portfolio',
       icon: Users,
       gradient: 'from-purple-500 to-pink-500',
       duration: '1 semana',
     },
     {
-      phase: 'Formación',
-      title: 'Programa intensivo',
+      phase: 'Formación y Proyecto',
+      title: 'Programa intensivo de construcción real',
       description: 'Clases, labs y proyectos prácticos',
       icon: BookOpen,
       gradient: 'from-teal-500 to-green-500',
-      duration: '12 semanas',
+      duration: '8 semanas',
     },
     {
-      phase: 'Proyecto',
-      title: 'Construcción real',
-      description: 'Desarrolla con mentorías y feedback',
+      phase: 'Sorpresa',
+      title: 'Eventos de nivel global  + Network',
+      description: 'Te acompañamos a tu primer evento',
       icon: Rocket,
       gradient: 'from-orange-500 to-red-500',
-      duration: '4 semanas',
+      duration: '1 semana',
     },
     {
       phase: 'Graduación',
-      title: 'Portfolio + Network',
-      description: 'Certificación',
+      title: 'Portfolio y accelerator',
+      description: 'Certificación y acompañamiento',
       icon: Award,
       gradient: 'from-yellow-500 to-orange-500',
       duration: 'Lifetime',
@@ -324,17 +265,23 @@ export default function BuildersPage() {
       answer: 'Buscamos programadoras con experiencia. No necesitas conocimiento previo en Web3, eso lo enseñamos.',
     },
     {
-      question: '¿Cómo es el proceso de selección?',
-      answer: 'Aplicación online + entrevista técnica + evaluación motivacional. Buscamos tanto skills como fit cultural y ganas de aprender.',
+      question: '¿Qué pasa en el evento de noviembre?',
+      answer: 'Es un evento presencial increíble en noviembre donde todas las builders se reúnen para networking, workshops y celebración.',
     },
     {
-      question: '¿Garantizan trabajo al final?',
-      answer: 'No garantizamos empleo, pero sí te preparamos con portfolio, network y skills demandadas.',
+      question: '¿Por qué necesitan mi dirección?',
+      answer: 'Para enviarte regalitos exclusivos y material del programa directamente a tu casa.',
     },
     {
       question: '¿Puedo trabajar mientras estudio?',
-      answer: 'El programa requiere dedicación significativa. Recomendamos tener flexibilidad laboral o estudiar en modalidad part-time.',
+      answer: 'El programa requiere dedicación significativa. Recomendamos tener flexibilidad laboral, especialmente para el evento de noviembre.',
     },
+  ];
+
+  const socialLinks = [
+    { name: 'Twitter/X', icon: Twitter, url: 'https://x.com/buendiabuilders' },
+    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/buen-dia-builders' },
+    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/buendia_builders/' },
   ];
 
   return (
@@ -372,7 +319,7 @@ export default function BuildersPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Tu viaje paso a paso</h2>
             <p className="text-xl text-muted-foreground">
-              Un proceso estructurado que te lleva desde la aplicación hasta la construcción de proyectos reales
+              Un proceso estructurado que te lleva desde la aplicación hasta el evento en noviembre
             </p>
           </div>
 
@@ -416,6 +363,31 @@ export default function BuildersPage() {
         </div>
       </section>
 
+      {/* Social Media CTA */}
+      <section className="py-16 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-6">¡Seguinos en nuestras redes!</h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Mantente al día con el programa y conecta con otras builders
+          </p>
+          <div className="flex justify-center gap-4">
+            {socialLinks.map((social) => (
+              <Button
+                key={social.name}
+                variant="outline"
+                size="lg"
+                className="hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-purple-500/10 transition-all duration-300"
+                onClick={() => window.open(social.url, '_blank')}
+              >
+                <social.icon className="mr-2 h-5 w-5" />
+                {social.name}
+                <ExternalLink className="ml-2 h-4 w-4" />
+              </Button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Application Form */}
       <section id="application-form" className="py-24 bg-gradient-to-b from-background to-muted/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -433,6 +405,7 @@ export default function BuildersPage() {
           <Card className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 border-border/50">
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Campos básicos obligatorios */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">
@@ -463,13 +436,13 @@ export default function BuildersPage() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Experiencia técnica <span className="text-red-500">*</span>
+                    <Github className="inline w-4 h-4 mr-1" />
+                    GitHub <span className="text-red-500">*</span>
                   </label>
-                  <Textarea
-                    value={formData.technicalExperience}
-                    onChange={(e) => setFormData({ ...formData, technicalExperience: e.target.value })}
-                    placeholder="Cuéntanos sobre tu background técnico, lenguajes, frameworks, años de experiencia..."
-                    rows={4}
+                  <Input
+                    value={formData.githubUrl}
+                    onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+                    placeholder="https://github.com/tuusername"
                     required
                     disabled={isSubmitting}
                   />
@@ -477,36 +450,96 @@ export default function BuildersPage() {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    ¿Por qué Web3? <span className="text-red-500">*</span>
+                    <MapPin className="inline w-4 h-4 mr-1" />
+                    Dirección completa para envío de regalitos <span className="text-red-500">*</span>
                   </label>
                   <Textarea
-                    value={formData.whyWeb3}
-                    onChange={(e) => setFormData({ ...formData, whyWeb3: e.target.value })}
-                    placeholder="¿Qué te motiva a hacer el cambio a Web3? ¿Qué esperas lograr?"
-                    rows={4}
+                    value={formData.fullAddress}
+                    onChange={(e) => setFormData({ ...formData, fullAddress: e.target.value })}
+                    placeholder="Calle 123, Ciudad, Provincia/Estado, País, Código Postal"
+                    rows={3}
                     required
                     disabled={isSubmitting}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Portfolio/GitHub</label>
-                  <Input
-                    value={formData.portfolioGithub}
-                    onChange={(e) => setFormData({ ...formData, portfolioGithub: e.target.value })}
-                    placeholder="https://github.com/tuusername o tu portfolio"
-                    disabled={isSubmitting}
-                  />
+                {/* Redes sociales opcionales */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Redes sociales (opcionales)</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        <Twitter className="inline w-4 h-4 mr-1" />
+                        Twitter/X
+                      </label>
+                      <Input
+                        value={formData.twitterX}
+                        onChange={(e) => setFormData({ ...formData, twitterX: e.target.value })}
+                        placeholder="https://x.com/username"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        <Linkedin className="inline w-4 h-4 mr-1" />
+                        LinkedIn
+                      </label>
+                      <Input
+                        value={formData.linkedin}
+                        onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                        placeholder="https://linkedin.com/in/username"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        <Instagram className="inline w-4 h-4 mr-1" />
+                        Instagram
+                      </label>
+                      <Input
+                        value={formData.instagram}
+                        onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+                        placeholder="https://instagram.com/username"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Código de acceso</label>
-                  <Input
-                    value={formData.accessCode}
-                    onChange={(e) => setFormData({ ...formData, accessCode: e.target.value })}
-                    placeholder="Si no tenés código no te preocupes!"
-                    disabled={isSubmitting}
-                  />
+                {/* Compromisos obligatorios */}
+                <div className="space-y-4 p-4 bg-gradient-to-r from-yellow-500/5 to-orange-500/5 rounded-lg border border-yellow-500/20">
+                  <h3 className="text-lg font-semibold text-yellow-700 dark:text-yellow-300">
+                    <Calendar className="inline w-5 h-5 mr-2" />
+                    Compromisos importantes
+                  </h3>
+                  
+                  <div className="flex items-start space-x-3">
+                    <Checkbox 
+                      id="november-commitment"
+                      checked={formData.novemberCommitment}
+                      onCheckedChange={(checked) => setFormData({ ...formData, novemberCommitment: !!checked })}
+                      disabled={isSubmitting}
+                      className="mt-1"
+                    />
+                    <label htmlFor="november-commitment" className="text-sm font-medium leading-relaxed">
+                      Me comprometo a estar disponible <strong>1 semana completa en noviembre (entre el 10 y 20)</strong> para participar del evento presencial 🎉
+                      <span className="text-red-500"> *</span>
+                    </label>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <Checkbox 
+                      id="follow-socials"
+                      checked={formData.followOurSocials}
+                      onCheckedChange={(checked) => setFormData({ ...formData, followOurSocials: !!checked })}
+                      disabled={isSubmitting}
+                      className="mt-1"
+                    />
+                    <label htmlFor="follow-socials" className="text-sm font-medium leading-relaxed">
+                      Me comprometo a seguir sus redes sociales (Twitter/X, LinkedIn e Instagram) para estar al día con el programa 📱
+                      <span className="text-red-500"> *</span>
+                    </label>
+                  </div>
                 </div>
 
                 <Button
@@ -533,13 +566,13 @@ export default function BuildersPage() {
         </div>
       </section>
 
-      {/* FAQ con acordeón */}
+      {/* FAQ */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Preguntas de Programadoras</h2>
+            <h2 className="text-4xl font-bold mb-6">Preguntas Frecuentes</h2>
             <p className="text-xl text-muted-foreground">
-              Respuestas a las preguntas más frecuentes
+              Respuestas a las preguntas más comunes sobre el programa
             </p>
           </div>
 

@@ -3,9 +3,8 @@ export type EmailType = 'builders' | 'empresas' | 'blockchains';
 export interface BuildersEmailData {
   fullName: string;
   email: string;
-  hasAccessCode: boolean;
-  technicalExperience: string;
-  whyWeb3: string;
+  githubUrl: string;
+  fullAddress: string;
 }
 
 export interface EmpresasEmailData {

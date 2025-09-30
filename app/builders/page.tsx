@@ -164,7 +164,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
     
     toast({
-      title: "¡Éxito!",
+      title: "Éxito!",
       description: "¡Aplicación enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
     });
 
@@ -220,6 +220,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       icon: Code2,
       gradient: 'from-blue-500 to-cyan-500',
       duration: '10 min',
+      dates: 'Ahora',
     },
     {
       phase: 'Selección',
@@ -228,30 +229,52 @@ const handleSubmit = async (e: React.FormEvent) => {
       icon: Users,
       gradient: 'from-purple-500 to-pink-500',
       duration: '1 semana',
+      dates: 'Octubre',
     },
     {
-      phase: 'Formación y Proyecto',
-      title: 'Programa intensivo de construcción real',
-      description: 'Clases, labs y proyectos prácticos',
+      phase: 'Programa principal',
+      title: 'Código Futura',
+      description: 'Clases martes y jueves 18:30-20:00 + sábados de refuerzo. Labs y proyectos prácticos en Web3',
       icon: BookOpen,
       gradient: 'from-teal-500 to-green-500',
-      duration: '8 semanas',
+      duration: '7 semanas',
+      dates: '7 Oct - 13 Nov',
     },
     {
-      phase: 'Sorpresa',
-      title: 'Eventos de nivel global  + Network',
-      description: 'Te acompañamos a tu primer evento',
+      phase: 'Builder Retreat',
+      title: 'Casa Builder(con beca)',
+      description: 'Experiencia inmersiva exclusiva para 20 builders seleccionadas',
       icon: Rocket,
       gradient: 'from-orange-500 to-red-500',
       duration: '1 semana',
+      dates: '16-23 Nov',
+    },
+    {
+      phase: 'Bootcamp Presencial',
+      title: 'Bootcamp intensivo (opcional)',
+      description: 'Sesiones presenciales avanzadas y networking',
+      icon: Users,
+      gradient: 'from-purple-500 to-pink-500',
+      duration: '3 días',
+      dates: '17-19 Nov',
+    },
+    {
+      phase: 'Hackathon',
+      title: 'Hackathon Stellar (obligatorio)',
+      description: 'Construye tu proyecto final y demuestra todo lo aprendido',
+      icon: Code2,
+      gradient: 'from-cyan-500 to-blue-500',
+      duration: '3 días',
+      dates: '20-22 Nov',
     },
     {
       phase: 'Graduación',
-      title: 'Portfolio y accelerator',
-      description: 'Certificación y acompañamiento',
+      title: 'Certificación y Portfolio',
+      description: 'Certificación oficial y acompañamiento continuo',
       icon: Award,
       gradient: 'from-yellow-500 to-orange-500',
       duration: 'Lifetime',
+      dates: 'Nov 2025',
     },
   ];
 
@@ -265,8 +288,12 @@ const handleSubmit = async (e: React.FormEvent) => {
       answer: 'Buscamos programadoras con experiencia. No necesitas conocimiento previo en Web3, eso lo enseñamos.',
     },
     {
-      question: '¿Qué pasa en el evento de noviembre?',
-      answer: 'Es un evento presencial increíble en noviembre donde todas las builders se reúnen para networking, workshops y celebración.',
+      question: '¿Cuál es el horario de las clases?',
+      answer: 'Las clases son martes y jueves de 18:30 a 20:00, más sábados de refuerzo durante 7 semanas (del 7 de octubre al 13 de noviembre). El hackathon final del 20-22 de noviembre es obligatorio.',
+    },
+    {
+      question: '¿Qué es el Builder Retreat del 16-23 de noviembre?',
+      answer: 'Es una experiencia inmersiva de una semana para builders seleccionadas con beca. Incluye el bootcamp presencial opcional (17-19 nov) y networking exclusivo.',
     },
     {
       question: '¿Por qué necesitan mi dirección?',
@@ -274,7 +301,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       question: '¿Puedo trabajar mientras estudio?',
-      answer: 'El programa requiere dedicación significativa. Recomendamos tener flexibilidad laboral, especialmente para el evento de noviembre.',
+      answer: 'El programa requiere dedicación significativa con clases martes, jueves y sábados. Es fundamental tener disponibilidad para el hackathon obligatorio del 20-22 de noviembre.',
     },
   ];
 
@@ -295,11 +322,11 @@ const handleSubmit = async (e: React.FormEvent) => {
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-                Tu viaje a Web3 comienza aquí
+                Código Futura:
               </span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Programa intensivo y gratuito que te transforma de <br />Programadora Web2 a Programadora Web3
+             Nuestro programa intensivo y gratuito que te transforma de Programadora Web2 <br />a Programadora Web3 con apoyo de Stellar a través de The BAF Network
             </p>
             <Button
               size="lg"
@@ -344,7 +371,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                         </Badge>
                         <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
                         <p className="text-muted-foreground mb-4">{step.description}</p>
-                        <p className="text-sm font-medium text-purple-500">Duración: {step.duration}</p>
+                        <div className="flex items-center justify-between text-sm">
+                          <p className="font-medium text-purple-500">Duración: {step.duration}</p>
+                          <p className="font-semibold text-blue-500">{step.dates}</p>
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
@@ -522,7 +552,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       className="mt-1"
                     />
                     <label htmlFor="november-commitment" className="text-sm font-medium leading-relaxed">
-                      Me comprometo a estar disponible <strong>1 semana completa en noviembre (entre el 10 y 20)</strong> para participar del evento presencial 🎉
+                      Me comprometo a estar disponible para el <strong>Hackathon obligatorio del 20-22 de noviembre</strong> y las clases regulares (martes y jueves 18:30-20:00 + sábados de refuerzo) 🎉
                       <span className="text-red-500"> *</span>
                     </label>
                   </div>

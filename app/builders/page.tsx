@@ -233,7 +233,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       phase: 'Programa principal',
-      title: 'Código Futura',
+      title: 'Código Futura (online, sincrónico)',
       description: 'Clases martes y jueves 18:30-20:00 + sábados de refuerzo. Labs y proyectos prácticos en Web3',
       icon: BookOpen,
       gradient: 'from-teal-500 to-green-500',
@@ -242,8 +242,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       phase: 'Builder Retreat',
-      title: 'Casa Builder(con beca)',
-      description: 'Experiencia inmersiva exclusiva para 20 builders seleccionadas',
+      title: 'Casa Builder(con beca, presencial)',
+      description: 'Experiencia inmersiva exclusiva para 20 builders seleccionadas que van a viajar a Buenos Aires, Argentina',
       icon: Rocket,
       gradient: 'from-orange-500 to-red-500',
       duration: '1 semana',
@@ -251,8 +251,8 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       phase: 'Bootcamp Presencial',
-      title: 'Bootcamp intensivo (opcional)',
-      description: 'Sesiones presenciales avanzadas y networking',
+      title: 'Bootcamp intensivo (opcional y presencial)',
+      description: 'Sesiones presenciales avanzadas y networking en Buenos Aires, Argentina',
       icon: Users,
       gradient: 'from-purple-500 to-pink-500',
       duration: '3 días',
@@ -260,7 +260,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       phase: 'Hackathon',
-      title: 'Hackathon Stellar (obligatorio)',
+      title: 'Hackathon Stellar (obligatorio y presencial)',
       description: 'Construye tu proyecto final y demuestra todo lo aprendido',
       icon: Code2,
       gradient: 'from-cyan-500 to-blue-500',
@@ -293,7 +293,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       question: '¿Qué es el Builder Retreat del 16-23 de noviembre?',
-      answer: 'Es una experiencia inmersiva de una semana para builders seleccionadas con beca. Incluye el bootcamp presencial opcional (17-19 nov) y networking exclusivo.',
+      answer: 'Es una experiencia inmersiva de una semana para builders seleccionadas con beca que van a viajar a Buenos Aires, Argentina. Incluye el bootcamp presencial opcional (17-19 nov) y networking exclusivo.',
     },
     {
       question: '¿Por qué necesitan mi dirección?',
@@ -552,7 +552,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       className="mt-1"
                     />
                     <label htmlFor="november-commitment" className="text-sm font-medium leading-relaxed">
-                      Me comprometo a estar disponible para el <strong>Hackathon obligatorio del 20-22 de noviembre</strong> y las clases regulares (martes y jueves 18:30-20:00 + sábados de refuerzo) 🎉
+                      Me comprometo a estar disponible para el <strong>Hackathon obligatorio en Buenos Aires del 20-22 de noviembre</strong> y las clases regulares (martes y jueves 18:30-20:00 + sábados de refuerzo) 🎉
                       <span className="text-red-500"> *</span>
                     </label>
                   </div>

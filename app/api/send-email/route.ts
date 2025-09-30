@@ -172,16 +172,16 @@ function generateBuildersEmail(data: BuildersEmailData): string {
           <h3>📆 Fechas clave del programa:</h3>
           <div class="dates-box">
             <div class="timeline-item">
-              <strong>7 Oct - 13 Nov:</strong> Código Futura (programa principal - 7 semanas)
+              <strong>7 Oct - 13 Nov:</strong> Código Futura (programa principal - 7 semanas) ONLINE para toda LATAM
             </div>
             <div class="timeline-item">
-              <strong>16 - 23 Nov:</strong> Casa Builder / Builder Retreat (solo con beca)
+              <strong>16 - 23 Nov:</strong> Casa Builder / Builder Retreat (solo con beca) PRESENCIAL en Buenos Aires, Argentina
             </div>
             <div class="timeline-item">
-              <strong>17 - 19 Nov:</strong> Bootcamp intensivo presencial (opcional)
+              <strong>17 - 19 Nov:</strong> Bootcamp intensivo (opcional) PRESENCIAL en Buenos Aires, Argentina
             </div>
             <div class="timeline-item">
-              <strong>20 - 22 Nov:</strong> Hackathon Final (obligatorio) 🎯
+              <strong>20 - 22 Nov:</strong> Hackathon Final (obligatorio) PRESENCIAL en Buenos Aires, Argentina🎯
             </div>
           </div>
 

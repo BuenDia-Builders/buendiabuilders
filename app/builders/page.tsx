@@ -3,32 +3,26 @@
 import { useLanguage } from '@/components/providers/language-provider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
-import { sendEmail } from '@/lib/email-service';
 import {
   Code2,
   Rocket,
   Users,
   BookOpen,
   Award,
-  ArrowRight,
   ArrowUp,
-  Loader2,
-  MapPin,
   Calendar,
   ExternalLink,
-  Github,
   Twitter,
   Linkedin,
-  Instagram
+  Instagram,
+  CheckCircle2,
+  Clock,
+  Sparkles,
+  Heart
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
 
 import {
   Accordion,
@@ -39,22 +33,7 @@ import {
 
 export default function BuildersPage() {
   const { t } = useLanguage();
-  const { toast } = useToast();
-  
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    githubUrl: '',
-    fullAddress: '',
-    novemberCommitment: false,
-    twitterX: '',
-    linkedin: '',
-    instagram: '',
-    followOurSocials: false,
-  });
-
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Monitor scroll position for scroll-to-top button
   useEffect(() => {
@@ -65,144 +44,6 @@ export default function BuildersPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-
-  try {
-    // Validación de campos obligatorios
-    if (!formData.fullName || !formData.email || !formData.githubUrl || !formData.fullAddress) {
-      toast({
-        title: "Error de validación",
-        description: "Por favor, completa todos los campos obligatorios",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validar compromisos obligatorios
-    if (!formData.novemberCommitment || !formData.followOurSocials) {
-      toast({
-        title: "Error de validación",
-        description: "Debes aceptar ambos compromisos para continuar",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Email inválido",
-        description: "Por favor, ingresa un email válido",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validar que GitHub URL sea válida
-    const githubRegex = /^https:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/;
-    if (!githubRegex.test(formData.githubUrl)) {
-      toast({
-        title: "GitHub URL inválida",
-        description: "Por favor, ingresa una URL válida de GitHub (ej: https://github.com/username)",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Insertar aplicación en la NUEVA tabla Supabase
-    const { data, error } = await supabase
-      .from('builders_applications') // ← NUEVA TABLA
-      .insert([
-        {
-          full_name: formData.fullName.trim(),
-          email: formData.email.trim().toLowerCase(),
-          github_url: formData.githubUrl.trim(),
-          full_address: formData.fullAddress.trim(),
-          november_commitment: formData.novemberCommitment,
-          twitter_x: formData.twitterX.trim() || null,
-          linkedin: formData.linkedin.trim() || null,
-          instagram: formData.instagram.trim() || null,
-          follow_our_socials: formData.followOurSocials,
-        }
-      ])
-      .select()
-      .maybeSingle();
-
-    if (error) {
-      console.error('Error al guardar:', error);
-      
-      if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
-        toast({
-          title: "Email duplicado",
-          description: "Ya existe una aplicación con este email",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error al enviar",
-          description: error.message || "Error al enviar la aplicación. Inténtalo de nuevo.",
-          variant: "destructive",
-        });
-      }
-      return;
-    }
-
-    // Enviar email de confirmación
-    try {
-      await sendEmail('builders', {
-        fullName: formData.fullName.trim(),
-        email: formData.email.trim().toLowerCase(),
-        githubUrl: formData.githubUrl.trim(),
-        fullAddress: formData.fullAddress.trim(),
-      });
-    } catch (emailError) {
-      console.error('Error enviando email de confirmación:', emailError);
-    }
-    
-    toast({
-      title: "Éxito!",
-      description: "¡Aplicación enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
-    });
-
-    // Limpiar formulario
-    setFormData({
-      fullName: '',
-      email: '',
-      githubUrl: '',
-      fullAddress: '',
-      novemberCommitment: false,
-      twitterX: '',
-      linkedin: '',
-      instagram: '',
-      followOurSocials: false,
-    });
-
-  } catch (error) {
-    console.error('Error:', error);
-    toast({
-      title: "Error",
-      description: "Hubo un problema enviando tu aplicación. Por favor intenta nuevamente.",
-      variant: "destructive",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-  // Function to scroll to form section
-  const scrollToForm = () => {
-    const formSection = document.getElementById('application-form');
-    if (formSection) {
-      formSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
 
   // Function to scroll to top
   const scrollToTop = () => {
@@ -220,7 +61,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       icon: Code2,
       gradient: 'from-blue-500 to-cyan-500',
       duration: '10 min',
-      dates: 'Ahora',
+      dates: 'Cerrado',
     },
     {
       phase: 'Selección',
@@ -242,7 +83,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
     {
       phase: 'Builder Retreat',
-      title: 'Casa Builder(con beca, presencial)',
+      title: 'Casa Builder (con beca, presencial)',
       description: 'Experiencia inmersiva exclusiva para 20 builders seleccionadas que van a viajar a Buenos Aires, Argentina',
       icon: Rocket,
       gradient: 'from-orange-500 to-red-500',
@@ -278,30 +119,37 @@ const handleSubmit = async (e: React.FormEvent) => {
     },
   ];
 
+  const stats = [
+    { number: '200+', label: 'Aplicaciones recibidas', icon: Users },
+    { number: '7', label: 'Semanas de formación', icon: Calendar },
+    { number: '100%', label: 'Gratuito', icon: CheckCircle2 },
+    { number: '20', label: 'Becas Builder Retreat', icon: Rocket },
+  ];
+
   const faqs = [
     {
-      question: '¿Es realmente gratis?',
+      question: '¿Habrá otra edición del programa?',
+      answer: 'Estamos evaluando futuras ediciones. Mantente atenta a nuestras redes sociales para enterarte de novedades y próximas convocatorias.',
+    },
+    {
+      question: '¿Fue realmente gratis este programa?',
       answer: 'Sí, nuestro programa de formación es completamente gratuito para builders. Nos financiamos a través de servicios B2B con empresas y protocolos.',
     },
     {
-      question: '¿Qué nivel técnico necesito?',
-      answer: 'Buscamos programadoras con experiencia. No necesitas conocimiento previo en Web3, eso lo enseñamos.',
+      question: '¿Qué nivel técnico se necesitaba?',
+      answer: 'Buscábamos programadoras con experiencia en desarrollo. No se necesitaba conocimiento previo en Web3, eso se enseñaba durante el programa.',
     },
     {
-      question: '¿Cuál es el horario de las clases?',
-      answer: 'Las clases son martes y jueves de 18:30 a 20:00, más sábados de refuerzo durante 7 semanas (del 7 de octubre al 13 de noviembre). El hackathon final del 20-22 de noviembre es obligatorio.',
+      question: '¿Cómo fue el horario de las clases?',
+      answer: 'Las clases fueron martes y jueves de 18:30 a 20:00, más sábados de refuerzo durante 7 semanas (del 7 de octubre al 13 de noviembre). El hackathon final del 20-22 de noviembre es obligatorio y presencial.',
     },
     {
       question: '¿Qué es el Builder Retreat del 16-23 de noviembre?',
-      answer: 'Es una experiencia inmersiva de una semana para builders seleccionadas con beca que van a viajar a Buenos Aires, Argentina. Incluye el bootcamp presencial opcional (17-19 nov) y networking exclusivo.',
+      answer: 'Es una experiencia inmersiva de una semana para 20 builders seleccionadas con beca que viajaran a Buenos Aires, Argentina. Incluye el bootcamp presencial (17-19 nov) y networking exclusivo.',
     },
     {
-      question: '¿Por qué necesitan mi dirección?',
-      answer: 'Para enviarte regalitos exclusivos y material del programa directamente a tu casa.',
-    },
-    {
-      question: '¿Puedo trabajar mientras estudio?',
-      answer: 'El programa requiere dedicación significativa con clases martes, jueves y sábados. Es fundamental tener disponibilidad para el hackathon obligatorio del 20-22 de noviembre.',
+      question: '¿Cómo puedo estar al tanto de próximas ediciones?',
+      answer: 'Síguenos en nuestras redes sociales (Twitter/X, LinkedIn e Instagram) donde anunciamos todas las novedades, convocatorias y actualizaciones del programa.',
     },
   ];
 
@@ -317,25 +165,51 @@ const handleSubmit = async (e: React.FormEvent) => {
       <section className="py-24 bg-gradient-to-b from-blue-500/5 to-purple-500/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <Badge className="mb-6 px-4 py-2 bg-blue-500/10 text-blue-500 border-blue-500/20">
-              Para Programadoras
+            <Badge className="mb-6 px-4 py-2 bg-orange-500/10 text-orange-500 border-orange-500/20">
+              <Clock className="w-4 h-4 mr-2 inline" />
+              Postulaciones Cerradas
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-                Código Futura:
+                Código Futura 2025
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-             Nuestro programa intensivo y gratuito que te transforma de Programadora Web2 <br />a Programadora Web3 con apoyo de Stellar a través de The BAF Network
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+              Las postulaciones para esta edición han cerrado exitosamente.
             </p>
-            <Button
-              size="lg"
-              onClick={scrollToForm}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
-            >
-              Aplicar ahora
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              <Heart className="inline w-5 h-5 text-pink-500 mr-2" />
+              ¡Gracias a todas las programadoras que aplicaron! El programa está en marcha con builders increíbles transformándose de Web2 a Web3.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-500/5 to-purple-500/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Código Futura 2025 en números</h2>
+            <p className="text-muted-foreground">El impacto de nuestra primera edición</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mb-4">
+                  <stat.icon className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-muted-foreground">{stat.label}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -344,9 +218,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Tu viaje paso a paso</h2>
+            <h2 className="text-4xl font-bold mb-6">El viaje de las builders</h2>
             <p className="text-xl text-muted-foreground">
-              Un proceso estructurado que te lleva desde la aplicación hasta el evento en noviembre
+              Un proceso estructurado de transformación de Web2 a Web3
             </p>
           </div>
 
@@ -394,13 +268,17 @@ const handleSubmit = async (e: React.FormEvent) => {
       </section>
 
       {/* Social Media CTA */}
-      <section className="py-16 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+      <section className="py-20 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <Sparkles className="w-12 h-12 mx-auto mb-6 text-purple-500" />
           <h2 className="text-3xl font-bold mb-6">¡Seguinos en nuestras redes!</h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Mantente al día con el programa y conecta con otras builders
+          <p className="text-lg text-muted-foreground mb-4">
+            Mantente al día con el progreso del programa actual y entérate de futuras convocatorias
           </p>
-          <div className="flex justify-center gap-4">
+          <p className="text-muted-foreground mb-8">
+            Conecta con nuestra comunidad de builders y sé parte de la transformación Web3
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
             {socialLinks.map((social) => (
               <Button
                 key={social.name}
@@ -418,179 +296,28 @@ const handleSubmit = async (e: React.FormEvent) => {
         </div>
       </section>
 
-      {/* Application Form */}
-      <section id="application-form" className="py-24 bg-gradient-to-b from-background to-muted/10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                Aplica ahora
-              </span>
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Comienza tu transformación a Web3 builder hoy mismo
-            </p>
-          </div>
-
+      {/* Future Editions CTA */}
+      <section className="py-20 bg-gradient-to-b from-background to-muted/10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 border-border/50">
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Campos básicos obligatorios */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Nombre completo <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      placeholder="Tu nombre completo"
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="tu@email.com"
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    <Github className="inline w-4 h-4 mr-1" />
-                    GitHub <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    value={formData.githubUrl}
-                    onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
-                    placeholder="https://github.com/tuusername"
-                    required
-                    disabled={isSubmitting}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    <MapPin className="inline w-4 h-4 mr-1" />
-                    Dirección completa para envío de regalitos <span className="text-red-500">*</span>
-                  </label>
-                  <Textarea
-                    value={formData.fullAddress}
-                    onChange={(e) => setFormData({ ...formData, fullAddress: e.target.value })}
-                    placeholder="Calle 123, Ciudad, Provincia/Estado, País, Código Postal"
-                    rows={3}
-                    required
-                    disabled={isSubmitting}
-                  />
-                </div>
-
-                {/* Redes sociales opcionales */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Redes sociales (opcionales)</h3>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <Twitter className="inline w-4 h-4 mr-1" />
-                        Twitter/X
-                      </label>
-                      <Input
-                        value={formData.twitterX}
-                        onChange={(e) => setFormData({ ...formData, twitterX: e.target.value })}
-                        placeholder="https://x.com/username"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <Linkedin className="inline w-4 h-4 mr-1" />
-                        LinkedIn
-                      </label>
-                      <Input
-                        value={formData.linkedin}
-                        onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                        placeholder="https://linkedin.com/in/username"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <Instagram className="inline w-4 h-4 mr-1" />
-                        Instagram
-                      </label>
-                      <Input
-                        value={formData.instagram}
-                        onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
-                        placeholder="https://instagram.com/username"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Compromisos obligatorios */}
-                <div className="space-y-4 p-4 bg-gradient-to-r from-yellow-500/5 to-orange-500/5 rounded-lg border border-yellow-500/20">
-                  <h3 className="text-lg font-semibold text-yellow-700 dark:text-yellow-300">
-                    <Calendar className="inline w-5 h-5 mr-2" />
-                    Compromisos importantes
-                  </h3>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Checkbox 
-                      id="november-commitment"
-                      checked={formData.novemberCommitment}
-                      onCheckedChange={(checked) => setFormData({ ...formData, novemberCommitment: !!checked })}
-                      disabled={isSubmitting}
-                      className="mt-1"
-                    />
-                    <label htmlFor="november-commitment" className="text-sm font-medium leading-relaxed">
-                      Me comprometo a estar disponible para el <strong>Hackathon obligatorio en Buenos Aires del 20-22 de noviembre</strong> y las clases regulares (martes y jueves 18:30-20:00 + sábados de refuerzo) 🎉
-                      <span className="text-red-500"> *</span>
-                    </label>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <Checkbox 
-                      id="follow-socials"
-                      checked={formData.followOurSocials}
-                      onCheckedChange={(checked) => setFormData({ ...formData, followOurSocials: !!checked })}
-                      disabled={isSubmitting}
-                      className="mt-1"
-                    />
-                    <label htmlFor="follow-socials" className="text-sm font-medium leading-relaxed">
-                      Me comprometo a seguir sus redes sociales (Twitter/X, LinkedIn e Instagram) para estar al día con el programa 📱
-                      <span className="text-red-500"> *</span>
-                    </label>
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300 disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Enviando aplicación...
-                    </>
-                  ) : (
-                    <>
-                      Enviar aplicación
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </form>
+            <CardContent className="p-12 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mb-6">
+                <Rocket className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="text-3xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                  ¿Futuras ediciones?
+                </span>
+              </h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                Estamos evaluando próximas convocatorias. Mientras tanto, síguenos en redes sociales para no perderte ninguna novedad.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <CheckCircle2 className="w-5 h-5 text-green-500" />
+                <span className="text-sm text-muted-foreground">
+                  Anunciaremos nuevas fechas en nuestras redes sociales
+                </span>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -602,7 +329,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Preguntas Frecuentes</h2>
             <p className="text-xl text-muted-foreground">
-              Respuestas a las preguntas más comunes sobre el programa
+              Respuestas sobre el programa y futuras ediciones
             </p>
           </div>
 

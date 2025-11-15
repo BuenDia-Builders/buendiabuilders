@@ -28,28 +28,28 @@ export function Footer() {
   };
 
   const communityLinks = [
-    { label: 'Enviar mensaje', href: 'mailto:hola@buendiabuilders.com', description: 'Contáctanos por correo', status: 'active' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/buen-dia-builders/', description: 'Conecta con nuestra red profesional', status: 'online' },
-    { label: 'Telegram', href: '#', description: 'Participa en nuestras conversaciones', status: 'active' },
-    { label: 'Discord', href: '#', description: 'Únete a nuestros canales de discusión', status: 'online' },
+    { label: t('footer.community.email'), href: 'mailto:hola@buendiabuilders.com', description: t('footer.community.email.desc'), status: 'active' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/buen-dia-builders/', description: t('footer.community.linkedin.desc'), status: 'online' },
+    { label: 'Telegram', href: '#', description: t('footer.community.telegram.desc'), status: 'active' },
+    { label: 'Discord', href: '#', description: t('footer.community.discord.desc'), status: 'online' },
   ];
 
   const resourceLinks = [
-    { label: 'Kit de Herramientas para Builders', href: '#', isNew: true },
-    { label: 'Calendario de Eventos', href: 'https://luma.com/user/buendiabuilders' },
-    { label: 'Ruta de Aprendizaje', href: '#' },
+    { label: t('footer.resources.toolkit'), href: '#', isNew: true },
+    { label: t('footer.resources.calendar'), href: 'https://luma.com/user/buendiabuilders' },
+    { label: t('footer.resources.learning'), href: '#' },
   ];
 
   const aboutLinks = [
-    { label: 'Nuestra Historia', href: '#' },
-    { label: 'Equipo', href: '#' },
-    { label: 'Kit de Prensa', href: '#' },
+    { label: t('footer.about.story'), href: '#' },
+    { label: t('footer.about.team'), href: '#' },
+    { label: t('footer.about.press'), href: '#' },
   ];
 
   const connectLinks = [
-    { label: 'Formulario de Aplicación', href: './builders#application-form' },
-    { label: 'Información para Patrocinadores', href: './blockchains#partnership-form', highlight: true },
-    { label: 'Contacto', href: 'mailto:buendiabuilders@gmail.com' },
+    { label: t('footer.connect.application'), href: './builders#application-form' },
+    { label: t('footer.connect.sponsors'), href: './blockchains#partnership-form', highlight: true },
+    { label: t('footer.connect.contact'), href: 'mailto:buendiabuilders@gmail.com' },
   ];
 
   const socialLinks = [
@@ -57,21 +57,21 @@ export function Footer() {
       icon: Twitter,
       href: 'https://x.com/buendiabuilders',
       label: 'X (Twitter)',
-      description: 'Síguenos en X',
+      description: t('footer.social.twitter.desc'),
       gradient: 'from-black to-gray-600'
     },
     {
       icon: Youtube,
       href: 'https://www.youtube.com/channel/UCHkKjB4IiLSj6z3XkqGbgkg',
       label: 'YouTube',
-      description: 'Videos y tutoriales',
+      description: t('footer.social.youtube.desc'),
       gradient: 'from-red-500 to-red-700'
     },
     {
       icon: Github,
       href: 'https://github.com/BuenDia-Builders',
       label: 'GitHub',
-      description: 'Explora nuestros proyectos',
+      description: t('footer.social.github.desc'),
       gradient: 'from-gray-700 to-gray-900'
     },
   ];
@@ -84,15 +84,15 @@ export function Footer() {
       <div className="py-16 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-2xl mx-auto text-center">
           <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-            {t('footer.newsletter')}
+            {t('footer.newsletter.title')}
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-            Recibe las últimas novedades del ecosistema Web3 en LATAM
+            {t('footer.newsletter.description')}
           </p>
           <form onSubmit={handleNewsletterSubmit} className="flex gap-4 max-w-md mx-auto">
             <Input
               type="email"
-              placeholder="tu@email.com"
+              placeholder={t('footer.newsletter.placeholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1"
@@ -114,7 +114,7 @@ export function Footer() {
         <div>
           <h3 className="text-lg font-black mb-6 flex items-center">
             <Users className="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" />
-            Comunidad
+            {t('footer.community.title')}
           </h3>
           <div className="space-y-4">
             {communityLinks.map((link, index) => (
@@ -145,7 +145,7 @@ export function Footer() {
         <div>
           <h3 className="text-lg font-black mb-6 flex items-center">
             <Code className="w-5 h-5 mr-2 text-green-500 dark:text-green-400" />
-            Recursos
+            {t('footer.resources.title')}
           </h3>
           <div className="space-y-4">
             {resourceLinks.map((link, index) => (
@@ -159,7 +159,7 @@ export function Footer() {
                 <span className="font-medium">{link.label}</span>
                 {link.isNew && (
                   <span className="ml-2 px-2 py-0.5 bg-green-500 text-gray-900 dark:text-gray-100 rounded-full text-xs font-bold">
-                    Próximamente
+                    {t('footer.resources.coming')}
                   </span>
                 )}
                 <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 ml-2" />
@@ -172,7 +172,7 @@ export function Footer() {
         <div>
           <h3 className="text-lg font-black mb-6 flex items-center">
             <Heart className="w-5 h-5 mr-2 text-red-500 dark:text-red-400" />
-            Nosotras
+            {t('footer.about.title')}
           </h3>
           <div className="space-y-4">
             {aboutLinks.map((link, index) => (
@@ -196,7 +196,7 @@ export function Footer() {
         <div>
           <h3 className="text-lg font-black mb-6 flex items-center">
             <Calendar className="w-5 h-5 mr-2 text-purple-500 dark:text-purple-400" />
-            Conecta
+            {t('footer.connect.title')}
           </h3>
           <div className="space-y-4">
             {connectLinks.map((link, index) => (
@@ -212,7 +212,7 @@ export function Footer() {
                   {link.label}
                   {link.highlight && (
                     <span className="ml-2 px-2 py-0.5 bg-purple-500 text-gray-900 dark:text-gray-100 rounded-full text-xs font-bold">
-                      ¡HOT!
+                      {t('footer.connect.hot')}
                     </span>
                   )}
                   <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 ml-2" />
@@ -226,7 +226,7 @@ export function Footer() {
         <div>
           <h3 className="text-lg font-black mb-6 flex items-center">
             <Mail className="w-5 h-5 mr-2 text-cyan-500 dark:text-cyan-400" />
-            Social
+            {t('footer.social.title')}
           </h3>
           <div className="space-y-3">
             {socialLinks.map((social, index) => {
@@ -264,25 +264,25 @@ export function Footer() {
             <Image src="/LogoBDB.png" alt="Buen Día Builders" width={70} height={70} className="rounded-lg" />
             <div>
               <div className="font-bold text-lg dark:text-white">Buen Día Builders</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 italic">donde las ideas despiertan</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 italic">{t('footer.tagline')}</div>
             </div>
           </Link>
 
           <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
-            <Link href="/terms" className="hover:text-gray-900 dark:hover:text-white">Términos</Link>
+            <Link href="/terms" className="hover:text-gray-900 dark:hover:text-white">{t('footer.legal.terms')}</Link>
             <span className="text-gray-400 dark:text-gray-500">|</span>
-            <Link href="/privacy" className="hover:text-gray-900 dark:hover:text-white">Privacidad</Link>
+            <Link href="/privacy" className="hover:text-gray-900 dark:hover:text-white">{t('footer.legal.privacy')}</Link>
           </div>
 
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <span>Hecho con</span>
+            <span>{t('footer.made')}</span>
             <Heart className="w-4 h-4 text-red-500 dark:text-red-400 mx-1 animate-pulse" />
-            <span>en LATAM</span>
+            <span>{t('footer.latam')}</span>
           </div>
         </div>
 
         <div className="text-center mt-6 pt-6 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
-          © {currentYear} Buen Día Builders. Construyendo el futuro de Web3 en Latinoamérica.
+          {t('footer.copyright')}
         </div>
       </div>
     </footer>

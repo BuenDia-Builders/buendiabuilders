@@ -42,7 +42,6 @@ export default function BlockchainsPage() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Monitor scroll position for scroll-to-top button
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
@@ -66,7 +65,6 @@ export default function BlockchainsPage() {
         return;
       }
 
-      // Validar formato de email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         toast({
@@ -77,7 +75,6 @@ export default function BlockchainsPage() {
         return;
       }
 
-      // Insertar en Supabase
       const { data, error } = await supabase
         .from('blockchain_inquiries')
         .insert([
@@ -120,7 +117,6 @@ export default function BlockchainsPage() {
         description: "¡Consulta enviada exitosamente! Te contactaremos pronto y recibirás un email de confirmación.",
       });
 
-      // Limpiar formulario
       setFormData({
         protocol: '',
         name: '',
@@ -129,7 +125,6 @@ export default function BlockchainsPage() {
         goals: '',
         budget: '',
       });
-
 
     } catch (error) {
       console.error('Error:', error);
@@ -143,7 +138,6 @@ export default function BlockchainsPage() {
     }
   };
 
-  // Function to scroll to form section
   const scrollToForm = () => {
     const formSection = document.getElementById('partnership-form');
     if (formSection) {
@@ -154,7 +148,6 @@ export default function BlockchainsPage() {
     }
   };
 
-  // Function to scroll to top
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -162,85 +155,30 @@ export default function BlockchainsPage() {
     });
   };
 
-  const programs = [
-    {
-      title: 'Technical Onboarding',
-      description: 'Curriculum específico y labs prácticos con tu tooling',
-      icon: BookOpen,
-      features: [
-        'Curriculum específico de tu protocol',
-        'Labs prácticos con tu tooling',
-        'Documentation en español',
-        'Developer certification program',
-      ],
-      pricing: '$10k-30k por protocolo',
-      gradient: 'from-blue-500 to-cyan-500',
-    },
-    {
-      title: 'Community Building',
-      description: 'Regional ambassador program y local engagement',
-      icon: Users,
-      features: [
-        'Regional ambassador program',
-        'Local meetups y eventos',
-        'Social media strategy LATAM',
-        'Influencer partnerships',
-      ],
-      pricing: '$5k-15k mensual',
-      gradient: 'from-purple-500 to-pink-500',
-    },
-    {
-      title: 'Educational Marketing',
-      description: 'Content creation técnico y workshop series',
-      icon: Target,
-      features: [
-        'Content creation técnico',
-        'Video tutorials específicos',
-        'Workshop series regionales',
-        'Conference speaking',
-      ],
-      pricing: '$3k-8k por evento',
-      gradient: 'from-teal-500 to-green-500',
-    },
-    {
-      title: 'Developer Relations',
-      description: 'Office hours, support directo y hackathon sponsorship',
-      icon: Zap,
-      features: [
-        'Office hours con tu team',
-        'Direct support channels',
-        'Bug bounty coordination',
-        'Hackathon sponsorship',
-      ],
-      pricing: 'Equity considerations',
-      gradient: 'from-orange-500 to-red-500',
-    },
-  ];
-
   const methodology = [
     {
-      phase: 'Análisis profundo del protocolo',
-      description: 'Entendemos tu grupo de aplicaciones, tokenomics y hoja de ruta.',
-      duration: '2 semanas',
-      deliverable: 'Análisis técnico',
+      phase: t('blockchains.methodology.analysis'),
+      description: t('blockchains.methodology.analysis.desc'),
+      duration: t('blockchains.methodology.analysis.duration'),
+      deliverable: t('blockchains.methodology.analysis.deliverable'),
     },
     {
-      phase: 'Curriculum Design',
-      description: 'Programa educativo customizado para tu protocolo',
-      duration: '3 semanas',
-      deliverable: 'Custom curriculum',
+      phase: t('blockchains.methodology.curriculum'),
+      description: t('blockchains.methodology.curriculum.desc'),
+      duration: t('blockchains.methodology.curriculum.duration'),
+      deliverable: t('blockchains.methodology.curriculum.deliverable'),
     },
     {
-      phase: 'Execution & Delivery',
-      description: 'Training delivery + community building execution',
-      duration: '12-24 semanas',
-      deliverable: 'Trained developers',
+      phase: t('blockchains.methodology.execution'),
+      description: t('blockchains.methodology.execution.desc'),
+      duration: t('blockchains.methodology.execution.duration'),
+      deliverable: t('blockchains.methodology.execution.deliverable'),
     },
     {
-      phase: 'Metrics & Optimization',
-      description: 'KPIs tracking y optimización continua',
-      duration: 'Ongoing',
-      deliverable: 'Performance reports',
+      phase: t('blockchains.methodology.metrics'),
+      description: t('blockchains.methodology.metrics.desc'),
+      duration: t('blockchains.methodology.metrics.duration'),
+      deliverable: t('blockchains.methodology.metrics.deliverable'),
     },
   ];
 
@@ -258,7 +196,7 @@ export default function BlockchainsPage() {
       category: 'DeFi',
       items: [
         { name: 'Uniswap', logo: '🦄', description: 'DEX protocol' },
-        { name: 'Compound', logo: '🛏️', description: 'Lending protocol' },
+        { name: 'Compound', logo: '🏛️', description: 'Lending protocol' },
         { name: 'Synthetix', logo: '⚡', description: 'Synthetic assets' },
         { name: 'Chainlink', logo: '🔗', description: 'Oracle network' },
       ],
@@ -283,67 +221,6 @@ export default function BlockchainsPage() {
     },
   ];
 
-  const metrics = [
-    {
-      title: 'Developers Onboarded',
-      value: 1500,
-      target: 2000,
-      growth: '+25%',
-      color: 'from-blue-500 to-cyan-500',
-    },
-    {
-      title: 'Active Users Growth',
-      value: 850,
-      target: 1200,
-      growth: '+40%',
-      color: 'from-purple-500 to-pink-500',
-    },
-    {
-      title: 'Transaction Volume',
-      value: 75,
-      target: 100,
-      growth: '+85%',
-      color: 'from-teal-500 to-green-500',
-    },
-    {
-      title: 'Community Engagement',
-      value: 92,
-      target: 100,
-      growth: '+15%',
-      color: 'from-orange-500 to-red-500',
-    },
-  ];
-
-  const partnerships = [
-    {
-      protocol: 'Stellar',
-      program: 'Stellar Builders LATAM',
-      duration: '12 meses',
-      results: '200+ developers trained, 15 projects launched',
-      testimonial: '"BdB was instrumental in our LATAM expansion strategy."',
-      author: 'Head of Developer Relations, Stellar',
-      rating: 5,
-    },
-    {
-      protocol: 'Polygon',
-      program: 'Polygon Academy LATAM',
-      duration: '8 meses',
-      results: '150+ developers certified, 25% increase in dApps',
-      testimonial: '"The regional expertise made all the difference."',
-      author: 'DevRel Lead, Polygon',
-      rating: 5,
-    },
-    {
-      protocol: 'Chainlink',
-      program: 'Oracle Developer Program',
-      duration: '6 meses',
-      results: '100+ oracle implementations, strong community growth',
-      testimonial: '"BdB delivered beyond our expectations."',
-      author: 'Community Manager, Chainlink',
-      rating: 5,
-    },
-  ];
-
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
@@ -351,22 +228,22 @@ export default function BlockchainsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-6 px-4 py-2 bg-teal-500/10 text-teal-500 border-teal-500/20">
-              Para Blockchains y Protocolos
+              {t('blockchains.page.badge')}
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                Acelera la adopción de tu protocolo en LATAM
+                {t('blockchains.page.title')}
               </span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Educación técnica, incorporación y desarrollo de comunidad para expandir tu ecosistema en la región más prometedora
+              {t('blockchains.page.subtitle')}
             </p>
             <Button
               size="lg"
               onClick={scrollToForm}
               className="bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:from-teal-600 hover:to-blue-600 transition-all duration-300"
             >
-              Explorar nuestras alianzas
+              {t('blockchains.page.cta')}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
@@ -377,9 +254,9 @@ export default function BlockchainsPage() {
       <section className="py-24 bg-gradient-to-b from-muted/10 to-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Nuestro enfoque</h2>
+            <h2 className="text-4xl font-bold mb-6">{t('blockchains.methodology.title')}</h2>
             <p className="text-xl text-muted-foreground">
-              Metodología de 4 fases para garantizar el éxito de tu expansion
+              {t('blockchains.methodology.subtitle')}
             </p>
           </div>
           <div className="relative">
@@ -400,7 +277,7 @@ export default function BlockchainsPage() {
                     <Card className="group hover:shadow-xl transition-all duration-300">
                       <CardContent className="p-8">
                         <Badge className="mb-4 bg-gradient-to-r from-teal-500 to-blue-500 text-white">
-                          Fase {index + 1}
+                          {t('blockchains.methodology.phase')} {index + 1}
                         </Badge>
                         <h3 className="text-2xl font-bold mb-4">{phase.phase}</h3>
                         <p className="text-muted-foreground mb-4">{phase.description}</p>
@@ -428,9 +305,9 @@ export default function BlockchainsPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Protocolos en que desarrollamos</h2>
+            <h2 className="text-4xl font-bold mb-6">{t('blockchains.protocols.title')}</h2>
             <p className="text-xl text-muted-foreground">
-              Experiencia técnica en diferentes verticales del ecosistema Web3
+              {t('blockchains.protocols.subtitle')}
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -467,11 +344,11 @@ export default function BlockchainsPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">
               <span className="bg-gradient-to-r from-teal-500 to-blue-500 bg-clip-text text-transparent">
-                Exploremos nuestra alianza
+                {t('blockchains.form.title')}
               </span>
             </h2>
             <p className="text-xl text-muted-foreground">
-              Cuéntanos sobre tu protocolo y objetivos en LATAM
+              {t('blockchains.form.subtitle')}
             </p>
           </div>
           <Card className="bg-gradient-to-br from-teal-500/5 to-blue-500/5 border-border/50">
@@ -480,24 +357,24 @@ export default function BlockchainsPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Protocolo/Proyecto <span className="text-red-500">*</span>
+                      {t('blockchains.form.protocol')} <span className="text-red-500">*</span>
                     </label>
                     <Input
                       value={formData.protocol}
                       onChange={(e) => setFormData({ ...formData, protocol: e.target.value })}
-                      placeholder="Nombre de tu protocolo"
+                      placeholder={t('blockchains.form.protocol.placeholder')}
                       required
                       disabled={isSubmitting}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Tu nombre <span className="text-red-500">*</span>
+                      {t('blockchains.form.name')} <span className="text-red-500">*</span>
                     </label>
                     <Input
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Tu nombre completo"
+                      placeholder={t('blockchains.form.name.placeholder')}
                       required
                       disabled={isSubmitting}
                     />
@@ -506,25 +383,25 @@ export default function BlockchainsPage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Email <span className="text-red-500">*</span>
+                      {t('blockchains.form.email')} <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="tu@protocolo.com"
+                      placeholder={t('blockchains.form.email.placeholder')}
                       required
                       disabled={isSubmitting}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Tu rol <span className="text-red-500">*</span>
+                      {t('blockchains.form.role')} <span className="text-red-500">*</span>
                     </label>
                     <Input
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      placeholder="DevRel, BD, etc."
+                      placeholder={t('blockchains.form.role.placeholder')}
                       required
                       disabled={isSubmitting}
                     />
@@ -532,23 +409,23 @@ export default function BlockchainsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Objetivos en LATAM <span className="text-red-500">*</span>
+                    {t('blockchains.form.goals')} <span className="text-red-500">*</span>
                   </label>
                   <Textarea
                     value={formData.goals}
                     onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
-                    placeholder="¿Qué buscas lograr en la región? Developer adoption, community growth, partnerships..."
+                    placeholder={t('blockchains.form.goals.placeholder')}
                     rows={4}
                     required
                     disabled={isSubmitting}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Budget aproximado (USD)</label>
+                  <label className="block text-sm font-medium mb-2">{t('blockchains.form.budget')}</label>
                   <Input
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    placeholder="Rango de investment para el programa"
+                    placeholder={t('blockchains.form.budget.placeholder')}
                     disabled={isSubmitting}
                   />
                 </div>
@@ -561,11 +438,11 @@ export default function BlockchainsPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Enviando...
+                      {t('blockchains.form.submitting')}
                     </>
                   ) : (
                     <>
-                      Solicitar programa customizado
+                      {t('blockchains.form.submit')}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </>
                   )}

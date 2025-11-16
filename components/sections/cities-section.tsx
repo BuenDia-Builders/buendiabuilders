@@ -12,10 +12,6 @@ const cities = [
   { name: 'Pipa', country: 'Brasil', active: true },
   { name: 'Ciudad de México', country: 'México', active: false },
   { name: 'Lima', country: 'Perú', active: false },
-  // { name: 'Bogotá', country: 'Colombia', active: false },
-  // { name: 'Santiago', country: 'Chile', active: false },
-  // { name: 'Caracas', country: 'Venezuela', active: false },
-  // { name: 'Montevideo', country: 'Uruguay', active: false },
 ];
 
 export function CitiesSection() {
@@ -36,11 +32,11 @@ export function CitiesSection() {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-              Buen día Builders en tu ciudad
+              {t('cities.title')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Expandiendo el ecosistema Web3 por toda Latinoamérica, ciudad por ciudad
+            {t('cities.subtitle')}
           </p>
         </div>
 
@@ -48,7 +44,7 @@ export function CitiesSection() {
           {/* Cities Grid */}
           <div>
             <h3 className="text-2xl font-bold mb-8 text-center lg:text-left">
-              Ciudades donde operamos
+              {t('cities.operating')}
             </h3>
             <div className="grid sm:grid-cols-2 gap-4">
               {cities.map((cityData, index) => (
@@ -77,7 +73,7 @@ export function CitiesSection() {
                     <div className={`mt-3 text-xs font-medium ${
                       cityData.active ? 'text-green-500' : 'text-orange-500'
                     }`}>
-                      {cityData.active ? 'Activo' : 'Próximamente'}
+                      {cityData.active ? t('cities.active') : t('cities.coming')}
                     </div>
                   </CardContent>
                 </Card>
@@ -89,17 +85,17 @@ export function CitiesSection() {
           <Card className="bg-gradient-to-br from-purple-500/5 to-blue-500/5 border-border/50">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-6 text-center">
-                ¿Tu ciudad no está en la lista?
+                {t('cities.form.title')}
               </h3>
               <p className="text-muted-foreground mb-8 text-center leading-relaxed">
-                Regístrate y te contactaremos cuando Buen día Builders llegue a tu ciudad
+                {t('cities.form.description')}
               </p>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <Input
                     type="email"
-                    placeholder="tu@email.com"
+                    placeholder={t('cities.form.email.placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full"
@@ -110,7 +106,7 @@ export function CitiesSection() {
                 <div>
                   <Input
                     type="text"
-                    placeholder="Tu ciudad"
+                    placeholder={t('cities.form.city.placeholder')}
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full"
@@ -123,13 +119,13 @@ export function CitiesSection() {
                   className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
                   size="lg"
                 >
-                  Notificarme cuando esté disponible
+                  {t('cities.form.submit')}
                   <Send className="ml-2 h-4 w-4" />
                 </Button>
               </form>
               
               <p className="text-xs text-muted-foreground text-center mt-4">
-                Te mantendremos informado sobre eventos y oportunidades en tu región
+                {t('cities.form.disclaimer')}
               </p>
             </CardContent>
           </Card>

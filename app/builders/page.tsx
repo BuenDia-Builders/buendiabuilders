@@ -35,7 +35,6 @@ export default function BuildersPage() {
   const { t } = useLanguage();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Monitor scroll position for scroll-to-top button
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
@@ -45,7 +44,6 @@ export default function BuildersPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Function to scroll to top
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -55,101 +53,101 @@ export default function BuildersPage() {
 
   const journey = [
     {
-      phase: 'Aplicación',
-      title: 'Completa tu perfil',
-      description: 'Formulario con tus datos y redes sociales',
+      phase: t('builders.journey.application'),
+      title: t('builders.journey.application.title'),
+      description: t('builders.journey.application.desc'),
       icon: Code2,
       gradient: 'from-blue-500 to-cyan-500',
-      duration: '10 min',
-      dates: 'Cerrado',
+      duration: t('builders.journey.application.duration'),
+      dates: t('builders.journey.application.dates'),
     },
     {
-      phase: 'Selección',
-      title: 'Selección técnica',
-      description: 'Revisión de github y/o portfolio',
+      phase: t('builders.journey.selection'),
+      title: t('builders.journey.selection.title'),
+      description: t('builders.journey.selection.desc'),
       icon: Users,
       gradient: 'from-purple-500 to-pink-500',
-      duration: '1 semana',
-      dates: 'Octubre',
+      duration: t('builders.journey.selection.duration'),
+      dates: t('builders.journey.selection.dates'),
     },
     {
-      phase: 'Programa principal',
-      title: 'Código Futura (online, sincrónico)',
-      description: 'Clases martes y jueves 18:30-20:00 + sábados de refuerzo. Labs y proyectos prácticos en Web3',
+      phase: t('builders.journey.program'),
+      title: t('builders.journey.program.title'),
+      description: t('builders.journey.program.desc'),
       icon: BookOpen,
       gradient: 'from-teal-500 to-green-500',
-      duration: '7 semanas',
-      dates: '7 Oct - 13 Nov',
+      duration: t('builders.journey.program.duration'),
+      dates: t('builders.journey.program.dates'),
     },
     {
-      phase: 'Builder Retreat',
-      title: 'Casa Builder (con beca, presencial)',
-      description: 'Experiencia inmersiva exclusiva para 20 builders seleccionadas que van a viajar a Buenos Aires, Argentina',
+      phase: t('builders.journey.retreat'),
+      title: t('builders.journey.retreat.title'),
+      description: t('builders.journey.retreat.desc'),
       icon: Rocket,
       gradient: 'from-orange-500 to-red-500',
-      duration: '1 semana',
-      dates: '16-23 Nov',
+      duration: t('builders.journey.retreat.duration'),
+      dates: t('builders.journey.retreat.dates'),
     },
     {
-      phase: 'Bootcamp Presencial',
-      title: 'Bootcamp intensivo (opcional y presencial)',
-      description: 'Sesiones presenciales avanzadas y networking en Buenos Aires, Argentina',
+      phase: t('builders.journey.bootcamp'),
+      title: t('builders.journey.bootcamp.title'),
+      description: t('builders.journey.bootcamp.desc'),
       icon: Users,
       gradient: 'from-purple-500 to-pink-500',
-      duration: '3 días',
-      dates: '17-19 Nov',
+      duration: t('builders.journey.bootcamp.duration'),
+      dates: t('builders.journey.bootcamp.dates'),
     },
     {
-      phase: 'Hackathon',
-      title: 'Hackathon Stellar (obligatorio y presencial)',
-      description: 'Construye tu proyecto final y demuestra todo lo aprendido',
+      phase: t('builders.journey.hackathon'),
+      title: t('builders.journey.hackathon.title'),
+      description: t('builders.journey.hackathon.desc'),
       icon: Code2,
       gradient: 'from-cyan-500 to-blue-500',
-      duration: '3 días',
-      dates: '20-22 Nov',
+      duration: t('builders.journey.hackathon.duration'),
+      dates: t('builders.journey.hackathon.dates'),
     },
     {
-      phase: 'Graduación',
-      title: 'Certificación y Portfolio',
-      description: 'Certificación oficial y acompañamiento continuo',
+      phase: t('builders.journey.graduation'),
+      title: t('builders.journey.graduation.title'),
+      description: t('builders.journey.graduation.desc'),
       icon: Award,
       gradient: 'from-yellow-500 to-orange-500',
-      duration: 'Lifetime',
-      dates: 'Nov 2025',
+      duration: t('builders.journey.graduation.duration'),
+      dates: t('builders.journey.graduation.dates'),
     },
   ];
 
   const stats = [
-    { number: '200+', label: 'Aplicaciones recibidas', icon: Users },
-    { number: '7', label: 'Semanas de formación', icon: Calendar },
-    { number: '100%', label: 'Gratuito', icon: CheckCircle2 },
-    { number: '20', label: 'Becas Builder Retreat', icon: Rocket },
+    { number: '200+', label: t('builders.stats.applications'), icon: Users },
+    { number: '7', label: t('builders.stats.weeks'), icon: Calendar },
+    { number: '100%', label: t('builders.stats.free'), icon: CheckCircle2 },
+    { number: '20', label: t('builders.stats.scholarships'), icon: Rocket },
   ];
 
   const faqs = [
     {
-      question: '¿Habrá otra edición del programa?',
-      answer: 'Estamos evaluando futuras ediciones. Mantente atenta a nuestras redes sociales para enterarte de novedades y próximas convocatorias.',
+      question: t('builders.faq.q1'),
+      answer: t('builders.faq.a1'),
     },
     {
-      question: '¿Fue realmente gratis este programa?',
-      answer: 'Sí, nuestro programa de formación es completamente gratuito para builders. Nos financiamos a través de servicios B2B con empresas y protocolos.',
+      question: t('builders.faq.q2'),
+      answer: t('builders.faq.a2'),
     },
     {
-      question: '¿Qué nivel técnico se necesitaba?',
-      answer: 'Buscábamos programadoras con experiencia en desarrollo. No se necesitaba conocimiento previo en Web3, eso se enseñaba durante el programa.',
+      question: t('builders.faq.q3'),
+      answer: t('builders.faq.a3'),
     },
     {
-      question: '¿Cómo fue el horario de las clases?',
-      answer: 'Las clases fueron martes y jueves de 18:30 a 20:00, más sábados de refuerzo durante 7 semanas (del 7 de octubre al 13 de noviembre). El hackathon final del 20-22 de noviembre es obligatorio y presencial.',
+      question: t('builders.faq.q4'),
+      answer: t('builders.faq.a4'),
     },
     {
-      question: '¿Qué es el Builder Retreat del 16-23 de noviembre?',
-      answer: 'Es una experiencia inmersiva de una semana para 20 builders seleccionadas con beca que viajaran a Buenos Aires, Argentina. Incluye el bootcamp presencial (17-19 nov) y networking exclusivo.',
+      question: t('builders.faq.q5'),
+      answer: t('builders.faq.a5'),
     },
     {
-      question: '¿Cómo puedo estar al tanto de próximas ediciones?',
-      answer: 'Síguenos en nuestras redes sociales (Twitter/X, LinkedIn e Instagram) donde anunciamos todas las novedades, convocatorias y actualizaciones del programa.',
+      question: t('builders.faq.q6'),
+      answer: t('builders.faq.a6'),
     },
   ];
 
@@ -167,19 +165,19 @@ export default function BuildersPage() {
           <div className="text-center mb-16">
             <Badge className="mb-6 px-4 py-2 bg-orange-500/10 text-orange-500 border-orange-500/20">
               <Clock className="w-4 h-4 mr-2 inline" />
-              Postulaciones Cerradas
+              {t('builders.page.badge')}
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-                Código Futura 2025
+                {t('builders.page.title')}
               </span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-              Las postulaciones para esta edición han cerrado exitosamente.
+              {t('builders.page.subtitle')}
             </p>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               <Heart className="inline w-5 h-5 text-pink-500 mr-2" />
-              ¡Gracias a todas las programadoras que aplicaron! El programa está en marcha con builders increíbles transformándose de Web2 a Web3.
+              {t('builders.page.thanks')}
             </p>
           </div>
         </div>
@@ -189,8 +187,8 @@ export default function BuildersPage() {
       <section className="py-16 bg-gradient-to-r from-blue-500/5 to-purple-500/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Código Futura 2025 en números</h2>
-            <p className="text-muted-foreground">El impacto de nuestra primera edición</p>
+            <h2 className="text-3xl font-bold mb-4">{t('builders.stats.title')}</h2>
+            <p className="text-muted-foreground">{t('builders.stats.subtitle')}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -218,9 +216,9 @@ export default function BuildersPage() {
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">El viaje de las builders</h2>
+            <h2 className="text-4xl font-bold mb-6">{t('builders.journey.title')}</h2>
             <p className="text-xl text-muted-foreground">
-              Un proceso estructurado de transformación de Web2 a Web3
+              {t('builders.journey.subtitle')}
             </p>
           </div>
 
@@ -246,7 +244,7 @@ export default function BuildersPage() {
                         <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
                         <p className="text-muted-foreground mb-4">{step.description}</p>
                         <div className="flex items-center justify-between text-sm">
-                          <p className="font-medium text-purple-500">Duración: {step.duration}</p>
+                          <p className="font-medium text-purple-500">{t('builders.journey.duration.label')} {step.duration}</p>
                           <p className="font-semibold text-blue-500">{step.dates}</p>
                         </div>
                       </CardContent>
@@ -271,12 +269,12 @@ export default function BuildersPage() {
       <section className="py-20 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Sparkles className="w-12 h-12 mx-auto mb-6 text-purple-500" />
-          <h2 className="text-3xl font-bold mb-6">¡Seguinos en nuestras redes!</h2>
+          <h2 className="text-3xl font-bold mb-6">{t('builders.social.title')}</h2>
           <p className="text-lg text-muted-foreground mb-4">
-            Mantente al día con el progreso del programa actual y entérate de futuras convocatorias
+            {t('builders.social.subtitle')}
           </p>
           <p className="text-muted-foreground mb-8">
-            Conecta con nuestra comunidad de builders y sé parte de la transformación Web3
+            {t('builders.social.description')}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {socialLinks.map((social) => (
@@ -306,16 +304,16 @@ export default function BuildersPage() {
               </div>
               <h2 className="text-3xl font-bold mb-4">
                 <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                  ¿Futuras ediciones?
+                  {t('builders.future.title')}
                 </span>
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                Estamos evaluando próximas convocatorias. Mientras tanto, síguenos en redes sociales para no perderte ninguna novedad.
+                {t('builders.future.description')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <CheckCircle2 className="w-5 h-5 text-green-500" />
                 <span className="text-sm text-muted-foreground">
-                  Anunciaremos nuevas fechas en nuestras redes sociales
+                  {t('builders.future.announcement')}
                 </span>
               </div>
             </CardContent>
@@ -327,9 +325,9 @@ export default function BuildersPage() {
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Preguntas Frecuentes</h2>
+            <h2 className="text-4xl font-bold mb-6">{t('builders.faq.title')}</h2>
             <p className="text-xl text-muted-foreground">
-              Respuestas sobre el programa y futuras ediciones
+              {t('builders.faq.subtitle')}
             </p>
           </div>
 

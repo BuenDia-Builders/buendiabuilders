@@ -1,288 +1,135 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/components/providers/language-provider';
-import {
-  Github, Twitter, Linkedin, Mail, Calendar, Code, Users, Heart, ExternalLink, Instagram, Youtube
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Twitter, Github, Linkedin, Youtube } from 'lucide-react';
 
-// TikTok icon component (since it's not in lucide-react)
-const TikTokIcon = ({ className }: { className?: string }) => (
+// Telegram icon
+const TelegramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
   </svg>
 );
 
 export function Footer() {
-  const { t } = useLanguage();
-  const [email, setEmail] = useState('');
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Newsletter subscription:', email);
-    setEmail('');
-  };
-
-  const communityLinks = [
-    { label: t('footer.community.email'), href: 'mailto:hola@buendiabuilders.com', description: t('footer.community.email.desc'), status: 'active' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/buen-dia-builders/', description: t('footer.community.linkedin.desc'), status: 'online' },
-    { label: 'Telegram', href: '#', description: t('footer.community.telegram.desc'), status: 'active' },
-    { label: 'Discord', href: '#', description: t('footer.community.discord.desc'), status: 'online' },
-  ];
-
-  const resourceLinks = [
-    { label: t('footer.resources.toolkit'), href: '#', isNew: true },
-    { label: t('footer.resources.calendar'), href: 'https://luma.com/user/buendiabuilders' },
-    { label: t('footer.resources.learning'), href: '#' },
-  ];
-
-  const aboutLinks = [
-    { label: t('footer.about.story'), href: '#' },
-    { label: t('footer.about.team'), href: '#' },
-    { label: t('footer.about.press'), href: '#' },
-  ];
-
-  const connectLinks = [
-    { label: t('footer.connect.application'), href: './builders#application-form' },
-    { label: t('footer.connect.sponsors'), href: './blockchains#partnership-form', highlight: true },
-    { label: t('footer.connect.contact'), href: 'mailto:buendiabuilders@gmail.com' },
-  ];
-
-  const socialLinks = [
-    {
-      icon: Twitter,
-      href: 'https://x.com/buendiabuilders',
-      label: 'X (Twitter)',
-      description: t('footer.social.twitter.desc'),
-      gradient: 'from-black to-gray-600'
-    },
-    {
-      icon: Youtube,
-      href: 'https://www.youtube.com/channel/UCHkKjB4IiLSj6z3XkqGbgkg',
-      label: 'YouTube',
-      description: t('footer.social.youtube.desc'),
-      gradient: 'from-red-500 to-red-700'
-    },
-    {
-      icon: Github,
-      href: 'https://github.com/BuenDia-Builders',
-      label: 'GitHub',
-      description: t('footer.social.github.desc'),
-      gradient: 'from-gray-700 to-gray-900'
-    },
-  ];
-
+  const { language } = useLanguage();
+  const isEs = language === 'es';
   const currentYear = new Date().getFullYear();
 
+  const socialIcons = [
+    { icon: Twitter, href: 'https://x.com/buendiabuilders', label: 'X' },
+    { icon: TelegramIcon, href: 'https://t.me/ar3lisa', label: 'Telegram' },
+    { icon: Github, href: 'https://github.com/BuenDia-Builders', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/company/buen-dia-builders/', label: 'LinkedIn' },
+    { icon: Youtube, href: 'https://www.youtube.com/channel/UCHkKjB4IiLSj6z3XkqGbgkg', label: 'YouTube' },
+  ];
+
+  const mainLinks = [
+    { label: 'GitHub', href: 'https://github.com/BuenDia-Builders' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/buen-dia-builders/' },
+    { label: isEs ? 'Nuestra Cultura' : 'Our Culture', href: '/culture' },
+  ];
+
   return (
-    <footer className="bg-background/80 backdrop-blur-md border-t border-border text-foreground">
-      {/* Newsletter Section */}
-      <div className="py-16 border-b border-gray-200 dark:border-gray-800">
-        <div className="max-w-2xl mx-auto text-center">
-          <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
-            {t('footer.newsletter.title')}
-          </h3>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-            {t('footer.newsletter.description')}
-          </p>
-          <form onSubmit={handleNewsletterSubmit} className="flex gap-4 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder={t('footer.newsletter.placeholder')}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1"
-              required
-            />
-            <Button
-              type="submit"
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6"
-            >
-              <Mail className="h-4 w-4" />
-            </Button>
-          </form>
-        </div>
-      </div>
-
+    <footer className="bg-background border-t border-border text-foreground">
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-5 md:grid-cols-2 gap-8">
-        {/* Comunidad */}
-        <div>
-          <h3 className="text-lg font-black mb-6 flex items-center">
-            <Users className="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" />
-            {t('footer.community.title')}
-          </h3>
-          <div className="space-y-4">
-            {communityLinks.map((link, index) => (
-              <div key={index}>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-start justify-between group hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-                >
-                  <span className="font-medium">{link.label}</span>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 ml-2 mt-1" />
-                </a>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${link.status === 'active' ? 'bg-green-500' :
-                    link.status === 'online' ? 'bg-blue-500 animate-pulse' :
-                      link.status === 'recent' ? 'bg-yellow-500' :
-                        'bg-gray-400 dark:bg-gray-600'
-                    }`} />
-                  {link.description}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.8fr_1fr_1.3fr] gap-10 lg:gap-8">
 
-        {/* Recursos */}
+        {/* Column 1: Logo + description + social icons */}
         <div>
-          <h3 className="text-lg font-black mb-6 flex items-center">
-            <Code className="w-5 h-5 mr-2 text-green-500 dark:text-green-400" />
-            {t('footer.resources.title')}
-          </h3>
-          <div className="space-y-4">
-            {resourceLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center group hover:text-green-500 dark:hover:text-green-400 transition-colors"
-              >
-                <span className="font-medium">{link.label}</span>
-                {link.isNew && (
-                  <span className="ml-2 px-2 py-0.5 bg-green-500 text-gray-900 dark:text-gray-100 rounded-full text-xs font-bold">
-                    {t('footer.resources.coming')}
-                  </span>
-                )}
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 ml-2" />
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Nosotras */}
-        <div>
-          <h3 className="text-lg font-black mb-6 flex items-center">
-            <Heart className="w-5 h-5 mr-2 text-red-500 dark:text-red-400" />
-            {t('footer.about.title')}
-          </h3>
-          <div className="space-y-4">
-            {aboutLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block font-medium hover:text-red-500 dark:hover:text-red-400 group"
-              >
-                <span className="flex items-center">
-                  {link.label}
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 ml-2" />
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Conecta */}
-        <div>
-          <h3 className="text-lg font-black mb-6 flex items-center">
-            <Calendar className="w-5 h-5 mr-2 text-purple-500 dark:text-purple-400" />
-            {t('footer.connect.title')}
-          </h3>
-          <div className="space-y-4">
-            {connectLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`block font-medium group ${link.highlight ? 'text-purple-500 hover:text-purple-400' : 'hover:text-purple-500 dark:hover:text-purple-400'
-                  }`}
-              >
-                <span className="flex items-center">
-                  {link.label}
-                  {link.highlight && (
-                    <span className="ml-2 px-2 py-0.5 bg-purple-500 text-gray-900 dark:text-gray-100 rounded-full text-xs font-bold">
-                      {t('footer.connect.hot')}
-                    </span>
-                  )}
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 ml-2" />
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Social */}
-        <div>
-          <h3 className="text-lg font-black mb-6 flex items-center">
-            <Mail className="w-5 h-5 mr-2 text-cyan-500 dark:text-cyan-400" />
-            {t('footer.social.title')}
-          </h3>
-          <div className="space-y-3">
-            {socialLinks.map((social, index) => {
+          <Link href="/" className="flex items-center gap-3 mb-5">
+            <Image src="/LogoBDB.png" alt="Buen Día Builders" width={50} height={50} />
+            <span className="font-bold text-lg tracking-tight">Buen Día Builders</span>
+          </Link>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-sm">
+            {isEs
+              ? 'Buen Día Builders es un hub de tecnologías emergentes en LATAM. Un espacio para builders, empresas y ecosistemas que quieren construir el futuro.'
+              : 'Buen Día Builders is an emerging technologies hub in LATAM. A space for builders, companies and ecosystems that want to build the future.'}
+          </p>
+          <div className="flex items-center gap-2">
+            {socialIcons.map((social) => {
               const Icon = social.icon;
               return (
                 <a
-                  key={index}
+                  key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center space-x-3 p-3 bg-gray-200 dark:bg-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-all transform hover:scale-105"
+                  className="w-9 h-9 flex items-center justify-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+                  aria-label={social.label}
                 >
-                  <div className={`w-8 h-8 bg-gradient-to-br ${social.gradient} rounded flex items-center justify-center shadow-lg`}>
-                    <Icon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-sm group-hover:text-blue-500 dark:group-hover:text-blue-400">
-                      {social.label}
-                    </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">
-                      {social.description}
-                    </div>
-                  </div>
+                  <Icon className="w-4 h-4" />
                 </a>
               );
             })}
           </div>
         </div>
-      </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-950">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-          <Link href="/" className="flex items-center space-x-4">
-            <Image src="/LogoBDB.png" alt="Buen Día Builders" width={70} height={70} className="rounded-lg" />
-            <div>
-              <div className="font-bold text-lg dark:text-white">Buen Día Builders</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400 italic">{t('footer.tagline')}</div>
-            </div>
-          </Link>
-
-          <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
-            <Link href="/terms" className="hover:text-gray-900 dark:hover:text-white">{t('footer.legal.terms')}</Link>
-            <span className="text-gray-400 dark:text-gray-500">|</span>
-            <Link href="/privacy" className="hover:text-gray-900 dark:hover:text-white">{t('footer.legal.privacy')}</Link>
-          </div>
-
-          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <span>{t('footer.made')}</span>
-            <Heart className="w-4 h-4 text-red-500 dark:text-red-400 mx-1 animate-pulse" />
-            <span>{t('footer.latam')}</span>
+        {/* Column 2: Links */}
+        <div>
+          <h3 className="font-bold text-sm mb-5">Links</h3>
+          <div className="space-y-3">
+            {mainLinks.map((link) => (
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            ))}
           </div>
         </div>
 
-        <div className="text-center mt-6 pt-6 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
-          {t('footer.copyright')}
+        {/* Column 3: Contact Us with QR + email */}
+        <div>
+          <h3 className="font-bold text-sm mb-5">Contact Us</h3>
+          <div className="flex gap-6">
+            {/* QR Code */}
+            <div className="flex flex-col items-center shrink-0">
+              <div className="w-28 h-28 rounded-lg border border-border overflow-hidden bg-white p-1">
+                <Image
+                  src="/qr-instagram.png"
+                  alt="Instagram QR"
+                  width={112}
+                  height={112}
+                  className="w-full h-full"
+                />
+              </div>
+              <span className="text-xs text-muted-foreground mt-2">Official Instagram</span>
+            </div>
+            {/* Contact info */}
+            <div className="space-y-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Business: </span>
+                <a href="mailto:buendiabuilders@gmail.com" className="text-blue-500 hover:text-blue-600 transition-colors">
+                  buendiabuilders@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-border">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-center">
+          <span className="text-sm text-muted-foreground">
+            Copyright &copy; {currentYear} Buen Día Builders
+          </span>
         </div>
       </div>
     </footer>

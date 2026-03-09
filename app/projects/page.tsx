@@ -2,10 +2,10 @@
 
 import { useLanguage } from '@/components/providers/language-provider';
 import { Footer } from '@/components/layout/footer';
-import { Hammer } from 'lucide-react';
+import { FolderOpen } from 'lucide-react';
 import Link from 'next/link';
 
-export default function BuildersPage() {
+export default function ProjectsPage() {
   const { language } = useLanguage();
   const isEs = language === 'es';
 
@@ -13,11 +13,11 @@ export default function BuildersPage() {
     <div className="min-h-screen">
       <section className="min-h-[70vh] flex items-center justify-center pt-16">
         <div className="text-center px-6">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/20 mb-8">
-            <Hammer className="w-10 h-10 text-blue-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/20 to-teal-500/20 border border-purple-500/20 mb-8">
+            <FolderOpen className="w-10 h-10 text-purple-400" />
           </div>
           <h1 className="text-4xl md:text-5xl font-black mb-4 text-foreground">
-            Builders
+            {isEs ? 'Proyectos' : 'Projects'}
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-md mx-auto">
             {isEs ? 'Próximamente' : 'Coming soon'}

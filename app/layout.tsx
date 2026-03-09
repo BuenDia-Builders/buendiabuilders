@@ -34,7 +34,7 @@ export default function RootLayout({
         >
           <LanguageProvider defaultLanguage="es">
             <ScrollProgress />
-            <FloatingElements />
+            {/* <FloatingElements /> */}
             <Navbar />
             <main className="relative z-10">
               {children}

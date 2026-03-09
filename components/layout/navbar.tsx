@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useLanguage } from '@/components/providers/language-provider';
 import { Button } from '@/components/ui/button';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { Sun, Moon, Menu, X, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
@@ -22,10 +22,8 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
-    { href: '/builders', label: t('nav.builders') },
-    { href: '/empresas', label: t('nav.empresas') },
-    { href: '/blockchains', label: t('nav.blockchains') },
-    // { href: '/dashboard', label: t('nav.dashboard') },
+    { href: '/builders', label: 'Builders' },
+    { href: '/projects', label: language === 'es' ? 'Proyectos' : 'Projects' },
   ];
 
   if (!mounted) return null;
@@ -34,20 +32,33 @@ export function Navbar() {
     <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md border-b border-border z-40">
       <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="relative">
-              <Image
-                src="/LogoBDB.png"
-                alt="Buen Día Builders Logo"
-                width={65}
-                height={65}
-                className="group-hover:scale-110 transition-transform duration-300"
-                priority
-              />
-              <div className="absolute -inset-2 bg-blue-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </div>
-          </Link>
+          {/* Logo + Stars */}
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <div className="relative">
+                <Image
+                  src="/LogoBDB.png"
+                  alt="Buen Día Builders Logo"
+                  width={65}
+                  height={65}
+                  className="group-hover:scale-110 transition-transform duration-300"
+                  priority
+                />
+                <div className="absolute -inset-2 bg-blue-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+            </Link>
+
+            {/* GitHub Stars Badge - next to logo */}
+            <a
+              href="https://github.com/BuenDia-Builders"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 hover:border-yellow-500/40 transition-all duration-300 group"
+            >
+              <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 group-hover:scale-110 transition-transform" />
+              <span className="text-xs font-semibold text-yellow-500/90">58</span>
+            </a>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
